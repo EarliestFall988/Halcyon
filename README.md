@@ -1,7 +1,7 @@
 
 <p align="center">
 <picture>
-  <img src="https://github.com/EarliestFall988/Halcyon/blob/master/Halcyon%20Logo.png" width="480" height="100" alt="Logo for Halcyon">
+  <img src="https://github.com/EarliestFall988/Halcyon/blob/master/Halcyon%20Logo.png" width="440" height="80" alt="Logo for Halcyon">
 </picture> 
 </p>
 
