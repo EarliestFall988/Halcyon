@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tweening_Lib
+namespace Lib
 {
     /// <summary>
     /// An abstract class representing a Game Object

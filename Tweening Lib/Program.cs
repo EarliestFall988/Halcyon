@@ -1,3 +1,3 @@
 ﻿
-using var game = new Tweening_Lib.GameController();
+using var game = new Lib.GameController();
 game.Run();

@@ -7,11 +7,10 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tweening_Lib
+namespace Lib
 {
     public class Transform
     {
-
         /// <summary>
         /// the position of the object
         /// </summary>
@@ -75,7 +74,7 @@ namespace Tweening_Lib
         /// <summary>
         /// The origin of the object
         /// </summary>
-        public Vector2 trueOrigin { get; set; } = Vector2.Zero;
+        public Vector2 localOrigin { get; set; } = Vector2.Zero;
 
         /// <summary>
         /// The origin of the object
@@ -86,7 +85,7 @@ namespace Tweening_Lib
             {
                 if (parent == null)
                 {
-                    return trueOrigin;
+                    return localOrigin;
                 }
                 else
                 {
@@ -118,7 +117,7 @@ namespace Tweening_Lib
             this.position = position;
             this.rotation = rotation;
             this.gameObject = gameObject;
-            trueOrigin = origin;
+            localOrigin = origin;
         }
 
 
@@ -133,7 +132,7 @@ namespace Tweening_Lib
             this.position = position;
             this.rotation = 0;
             this.gameObject = gameObject;
-            trueOrigin = origin;
+            localOrigin = origin;
         }
 
 
@@ -147,7 +146,7 @@ namespace Tweening_Lib
             this.position = position;
             this.rotation = 0;
             this.gameObject = gameObject;
-            trueOrigin = Vector2.Zero;
+            localOrigin = Vector2.Zero;
         }
 
         /// <summary>

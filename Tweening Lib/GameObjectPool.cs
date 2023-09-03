@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tweening_Lib
+namespace Lib
 {
     public class GameObjectPool
     {

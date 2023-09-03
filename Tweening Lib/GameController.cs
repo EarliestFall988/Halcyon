@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Pleasing;
-using Tweening_Lib.PleasingTweening;
+using Lib.PleasingTweening;
 
-namespace Tweening_Lib
+namespace Lib
 {
     public class GameController : Game
     {
@@ -35,7 +35,6 @@ namespace Tweening_Lib
             IsMouseVisible = true;
 
             GameObjectPool = new GameObjectPool();
-
         }
 
         protected override void Initialize()
@@ -69,10 +68,9 @@ namespace Tweening_Lib
             var positionProperty = timeline.AddVector2(GameObjectPool.GameObjectsToUpdate[0].transform, "position");
             var rotationProperty = timeline.AddFloat(GameObjectPool.GameObjectsToUpdate[0].transform, "rotation");
 
-            positionProperty.AddFrame(500, new Vector2(100, 200), Easing.Back.InOut);
-            positionProperty.AddFrame(1000, new Vector2(200, 200), Easing.Back.InOut);
-            positionProperty.AddFrame(1500, new Vector2(200, 100), Easing.Back.InOut);
-            positionProperty.AddFrame(2000, new Vector2(100, 100), Easing.Back.InOut);
+            positionProperty.AddFrame(1000, new Vector2(100, 200), Easing.Back.InOut);
+            positionProperty.AddFrame(2000, new Vector2(200, 200), Easing.Back.InOut);
+            positionProperty.AddFrame(3000, new Vector2(100, 100), Easing.Back.InOut);
 
             rotationProperty.AddFrame(500, 0, Easing.Cubic.InOut);
             rotationProperty.AddFrame(1000, 3 * MathF.PI / 4, Easing.Cubic.InOut);

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Tweening_Lib.PleasingTweening
+namespace Lib.PleasingTweening
 {
     public enum TweenState
     {
