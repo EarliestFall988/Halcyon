@@ -14,3 +14,5 @@
 
 ## Libraries Included
 - [Pleasing](https://github.com/franknorton/Pleasing) - A straightforward tweening library. (MIT License)
+- Kenney
+  -  [Kenney Generic Items](https://kenney.nl/assets/generic-items) - 2d Graphics textures. (Creative Commons)
