@@ -11,3 +11,6 @@
 
 ## Details
  - Author: Taylor Howell (Earliestfall988)
+
+## Libraries Included
+- [Pleasing](https://github.com/franknorton/Pleasing) - A straightforward tweening library. (MIT License)
