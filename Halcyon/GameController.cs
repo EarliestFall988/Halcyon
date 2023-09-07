@@ -59,7 +59,7 @@ namespace Lib
             atlasSpriteTest.Atlas = _genericObjectsAtlas;
             atlasSpriteTest.SpriteLocation = new Rectangle(688, 393, 52, 68);
 
-            var atlasSpriteTest1 = GameObjectPool.InitGameObject(new AtlasSprite(), new Vector2(150, 105), 0, new Vector2(52, 68) / 2, _spriteBatch);
+            var atlasSpriteTest1 = GameObjectPool.InitGameObject(new AtlasSprite(), new Vector2(150, 200), 0, new Vector2(52, 68) / 2, _spriteBatch);
             atlasSpriteTest1.Atlas = _genericObjectsAtlas;
             atlasSpriteTest1.SpriteLocation = new Rectangle(688, 393, 52, 68);
             atlasSpriteTest1.transform.SetParent(atlasSpriteTest.transform);
@@ -67,6 +67,7 @@ namespace Lib
             TweenTimeline timeline = Tweening.NewTimeline();
             var positionProperty = timeline.AddVector2(GameObjectPool.GameObjectsToUpdate[0].transform, "position");
             var rotationProperty = timeline.AddFloat(GameObjectPool.GameObjectsToUpdate[0].transform, "rotation");
+            var scaleProperty = timeline.AddFloat(GameObjectPool.GameObjectsToUpdate[0].transform, "scale");
 
             positionProperty.AddFrame(1000, new Vector2(100, 200), Easing.Back.InOut);
             positionProperty.AddFrame(2000, new Vector2(200, 200), Easing.Back.InOut);
@@ -76,6 +77,12 @@ namespace Lib
             rotationProperty.AddFrame(1000, 3 * MathF.PI / 4, Easing.Cubic.InOut);
             rotationProperty.AddFrame(1500, MathF.PI / 2, Easing.Cubic.InOut);
             rotationProperty.AddFrame(2000, 0, Easing.Cubic.InOut);
+
+            scaleProperty.AddFrame(500, 1, Easing.Cubic.InOut);
+            scaleProperty.AddFrame(1000, 2, Easing.Cubic.InOut);
+            scaleProperty.AddFrame(1500, 0.5f, Easing.Cubic.InOut);
+            scaleProperty.AddFrame(2000, 1, Easing.Cubic.InOut);
+
             timeline.Loop = true;
 
 

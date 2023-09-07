@@ -40,10 +40,31 @@ namespace Lib
         public Vector2 rect { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private float _scale = 0;
+
+        /// <summary>
         /// the scale value
         /// </summary>
-        public float scaleValue { get; set; } = 1;
+        public float scale
+        {
+            get
+            {
+                return _scale;
+            }
 
+            set
+            {
+                var multiplier = value / _scale;
+                _scale = value;
+
+                foreach (var x in children)
+                {
+                    x.scale = scale * multiplier;
+                }
+            }
+        }
 
         private float _localRotation = 0;
 

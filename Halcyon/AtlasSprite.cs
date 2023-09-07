@@ -49,7 +49,7 @@ namespace Lib
         /// </summary>
         protected override void DrawObject(GameTime time)
         {
-            batch.Draw(Atlas, transform.position + transform.origin, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
+            batch.Draw(Atlas, transform.position + transform.origin, SpriteLocation, color, transform.rotation, transform.origin, transform.scale, Effect, LayerValue);
         }
     }
 }
