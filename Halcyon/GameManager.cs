@@ -6,60 +6,56 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks.Dataflow;
 using Pleasing;
 using Lib.PleasingTweening;
 
 namespace Lib
 {
-    public class GameController : Game
+    public class GameManager : Game
     {
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
+        public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D _genericObjectsAtlas;
+        private Texture2D _platformerReduxAtlas;
         public static ContentManager RootContent;
         public GameObjectPool GameObjectPool;
 
-        private bool start = false;
-
         public static GameTime Time;
 
-        public GameController()
+        public GameManager()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             RootContent = Content;
             IsMouseVisible = true;
-
-            GameObjectPool = new GameObjectPool();
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-
-
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameObjectPool = new GameObjectPool(_spriteBatch);
 
 
             base.Initialize();
         }
 
-        protected override void LoadContent()
+        /// <summary>
+        /// This is the example code to load and run
+        /// </summary>
+        private void ExampleCodeToLoadAndRun()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _genericObjectsAtlas = Content.Load<Texture2D>(p_KenneyGenericObjects);
-
             Debug.WriteLineIf(_genericObjectsAtlas == null, "Could not create the atlas");
 
-            var atlasSpriteTest = GameObjectPool.InitGameObject(new AtlasSprite(), new Vector2(100, 100), 0, new Vector2(52, 68) / 2, _spriteBatch);
+            var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(100, 100), 0, new Vector2(52, 68) / 2);
             atlasSpriteTest.Atlas = _genericObjectsAtlas;
             atlasSpriteTest.SpriteLocation = new Rectangle(688, 393, 52, 68);
 
-            var atlasSpriteTest1 = GameObjectPool.InitGameObject(new AtlasSprite(), new Vector2(150, 105), 0, new Vector2(52, 68) / 2, _spriteBatch);
+            var atlasSpriteTest1 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(150, 105), 0, new Vector2(52, 68) / 2);
             atlasSpriteTest1.Atlas = _genericObjectsAtlas;
             atlasSpriteTest1.SpriteLocation = new Rectangle(688, 393, 52, 68);
             atlasSpriteTest1.transform.SetParent(atlasSpriteTest.transform);
@@ -77,7 +73,59 @@ namespace Lib
             rotationProperty.AddFrame(1500, MathF.PI / 2, Easing.Cubic.InOut);
             rotationProperty.AddFrame(2000, 0, Easing.Cubic.InOut);
             timeline.Loop = true;
+        }
 
+        protected override void LoadContent()
+        {
+            //ExampleCodeToLoadAndRun();
+
+            _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
+
+            //var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(100, 100), 0, new Vector2(52, 68) / 2);
+            //atlasSpriteTest.Atlas = _platformerReduxAtlas;
+            //atlasSpriteTest.SpriteLocation = new Rectangle(780, 774, 128, 256);
+
+            //AnimatedSprite sprite = new AnimatedSprite(new Vector2(128, 256) / 2)
+            //{
+            //    Atlas = _platformerReduxAtlas,
+            //    frames = new List<Rectangle>()
+            //    {
+            //        new Rectangle(780,774,128,256),
+            //        new Rectangle(780,516,128,256)
+            //    }
+            //};
+
+            //sprite.transform.position = new Vector2(100, 200);
+            //sprite.transform.scaleValue = 1f;
+
+            GameCharacter character = new()
+            {
+                Atlas = _platformerReduxAtlas,
+                States = new Dictionary<string, CharacterState>()
+                {
+                    {
+                        "idle", new CharacterState()
+                        {
+                            frames = new List<Rectangle>()
+                            {
+                                new Rectangle(780,774,128,256),
+                                new Rectangle(780,516,128,256)
+                            }
+                        }
+                    },
+                    {
+                        "walk", new CharacterState()
+                        {
+                            frames = new List<Rectangle>()
+                            {
+                                new Rectangle(780,774,128,256),
+                                new Rectangle(780,516,128,256)
+                            }
+                        }
+                    }
+                }
+            };
+            character.transform.scaleValue = 1;
 
             // TODO: use this.Content to load your game content here
         }
@@ -87,11 +135,6 @@ namespace Lib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (!start)
-            {
-
-                start = true;
-            }
 
 
             Tweening.Update(gameTime);
@@ -113,6 +156,8 @@ namespace Lib
             // TODO: Add your drawing code here
 
             _spriteBatch.Begin();
+
+
 
             for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)
             {

@@ -1,3 +1,3 @@
 ﻿
-using var game = new Lib.GameController();
+using var game = new Lib.GameManager();
 game.Run();

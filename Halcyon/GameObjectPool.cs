@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Lib
 {
+    /// <summary>
+    /// Stores and handles the list of game objects in the game at a given time
+    /// </summary>
     public class GameObjectPool
     {
 
@@ -17,6 +20,23 @@ namespace Lib
         /// </summary>
         public List<GameObject> GameObjectsToUpdate { get; private set; } = new List<GameObject>();
         private List<GameObject> DisabledObjects { get; set; } = new List<GameObject>();
+
+        private SpriteBatch _batch;
+
+        /// <summary>
+        /// The instance of the game object pool
+        /// </summary>
+        public static GameObjectPool Main { get; private set; }
+
+        public GameObjectPool(SpriteBatch batch)
+        {
+            if (Main != null)
+                throw new Exception("There can only be on game object pool instance in the game");
+
+            Main = this;
+
+            _batch = batch;
+        }
 
         /// <summary>
         /// Get a list of all the objects
@@ -32,6 +52,19 @@ namespace Lib
             }
         }
 
+
+        /// <summary>
+        /// Initialize the game object
+        /// </summary>
+        /// <typeparam name="T">the type of the gameobject</typeparam>
+        /// <param name="obj">the object</param>
+        /// <returns>returns the instantiated object</returns>
+        /// <remarks>This object will spawn at (100,100) and have an origin point of (0,0)</remarks>
+        public T SpawnObject<T>(T obj) where T : GameObject
+        {
+            return SpawnObject<T>(obj, new Vector2(100, 100), 0, Vector2.Zero);
+        }
+
         /// <summary>
         /// Initialize the game object
         /// </summary>
@@ -41,13 +74,13 @@ namespace Lib
         /// <param name="rotation">the rotation of the gameobject</param>
         /// <param name="batch">the sprite batch</param>
         /// <returns>returns the object</returns>
-        public T InitGameObject<T>(T gameobject, Vector2 position, float rotation, Vector2 scale, SpriteBatch batch) where T : GameObject
+        public T SpawnObject<T>(T gameobject, Vector2 position, float rotation, Vector2 scale) where T : GameObject
         {
             var transform = new Transform(position, scale, rotation, gameobject);
             gameobject.transform = transform;
             gameobject.Enabled = true;
             gameobject.Visible = true;
-            gameobject.batch = batch;
+            gameobject.batch = _batch;
 
             gameobject.EnabledChanged += ObjectEnabledChanged;
 

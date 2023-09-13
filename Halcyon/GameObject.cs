@@ -42,6 +42,11 @@ namespace Lib
         public int LayerValue { get; set; } = 0;
 
         /// <summary>
+        /// The main game object pool
+        /// </summary>
+        public GameObjectPool pool => GameObjectPool.Main;
+
+        /// <summary>
         /// Is this object enabled?
         /// </summary>
         public bool Enabled
@@ -190,7 +195,7 @@ namespace Lib
             Enabled = active;
             Visible = active;
         }
-        
+
         #endregion
 
         #region static methods
