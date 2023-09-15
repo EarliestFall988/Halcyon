@@ -59,7 +59,7 @@ namespace Lib
             pool.SpawnObject<AnimatedSprite>(this, new Vector2(100, 100), 0, origin); //<- might need to think about what this means if trying to combine multiple sprites...
         }
 
-        protected override void DrawObject(GameTime time)
+        protected override void DrawObject(GameTime time, Vector2 cameraPositionOffset, float cameraRotationOffset)
         {
             if (Atlas == null)
                 throw new Exception("atlas is null");

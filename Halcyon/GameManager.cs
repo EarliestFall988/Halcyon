@@ -26,6 +26,7 @@ namespace Lib
 
         public static ContentManager RootContent;
         public GameObjectPool GameObjectPool;
+        public Camera _camera = new();
 
         public static GameTime Time;
 
@@ -41,7 +42,7 @@ namespace Lib
         {
             // TODO: Add your initialization logic here
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            GameObjectPool = new GameObjectPool(_spriteBatch);
+            GameObjectPool = new GameObjectPool(_spriteBatch, _camera);
 
 
             base.Initialize();
@@ -139,6 +140,7 @@ namespace Lib
             character.transform.scaleValue = 1f;
             character.name = "character";
             character.transform.scaleValue = 0.5f;
+
         }
 
 
@@ -149,7 +151,7 @@ namespace Lib
 
                 for (int i = 0; i < 15; i++)
                 {
-                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128 * i / 2, 355 + 128 * k / 2), 0, Vector2.Zero);
+                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2), 0, Vector2.Zero);
                     atlasSpriteTest.Atlas = _platformerReduxAtlas;
                     if (k == 0)
                     {
@@ -164,17 +166,13 @@ namespace Lib
             }
         }
 
-        protected override void LoadContent()
+        private void CreateDetails()
         {
-            //ExampleCodeToLoadAndRun();
-
-            _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
-            _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
-
-            var backgroundSprite = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(0, 0), 0, Vector2.Zero);
+            var backgroundSprite = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(-5, -5), 0, Vector2.Zero);
             backgroundSprite.Atlas = _platformerReduxBackground;
             backgroundSprite.SpriteLocation = new Rectangle(0, 0, 1920, 1080);
             backgroundSprite.transform.scaleValue = 0.5f;
+            backgroundSprite.WorldType = SpriteType.Background;
 
             var fence = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128, 355 - 128 / 2), 0, Vector2.Zero);
             fence.Atlas = _platformerReduxAtlas;
@@ -200,10 +198,31 @@ namespace Lib
             rock.Atlas = _platformerReduxAtlas;
             rock.SpriteLocation = new Rectangle(2080, 390, 128, 128);
             rock.transform.scaleValue = 0.5f;
+        }
 
+        protected override void LoadContent()
+        {
+            //ExampleCodeToLoadAndRun();
+
+            _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
+            _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
+
+
+            //TweenTimeline timeline = Tweening.NewTimeline();
+            //var positionProperty = timeline.AddVector2(_camera, nameof(_camera.position));
+
+            //positionProperty.AddFrame(1000, new Vector2(5, 5), Easing.Back.InOut);
+            //positionProperty.AddFrame(2000, new Vector2(10, 5), Easing.Back.InOut);
+            //positionProperty.AddFrame(3000, new Vector2(5, 10), Easing.Back.InOut);
+            //positionProperty.AddFrame(4000, new Vector2(5, 5), Easing.Back.InOut);
+            //positionProperty.AddFrame(5000, new Vector2(0, 0), Easing.Back.InOut);
+
+            //timeline.Loop = true;
+
+            //z order applies here
+            CreateDetails();
             SetupCharacter();
             CreateGround();
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -212,8 +231,8 @@ namespace Lib
                 Exit();
 
 
-
             Tweening.Update(gameTime);
+
 
             // TODO: Add your update logic here
 
@@ -221,6 +240,8 @@ namespace Lib
             {
                 GameObjectPool.GameObjectsToUpdate[i].Update(gameTime);
             }
+
+            _camera.HandheldCameraShake(gameTime);
 
             base.Update(gameTime);
         }

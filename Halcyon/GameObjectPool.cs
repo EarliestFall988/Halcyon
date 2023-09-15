@@ -12,7 +12,7 @@ namespace Lib
     /// <summary>
     /// Stores and handles the list of game objects in the game at a given time
     /// </summary>
-    public class GameObjectPool
+    public sealed class GameObjectPool
     {
 
         /// <summary>
@@ -23,12 +23,14 @@ namespace Lib
 
         private SpriteBatch _batch;
 
+        public Camera Camera { get; private set; }
+
         /// <summary>
         /// The instance of the game object pool
         /// </summary>
         public static GameObjectPool Main { get; private set; }
 
-        public GameObjectPool(SpriteBatch batch)
+        public GameObjectPool(SpriteBatch batch, Camera camera)
         {
             if (Main != null)
                 throw new Exception("There can only be on game object pool instance in the game");
@@ -36,6 +38,7 @@ namespace Lib
             Main = this;
 
             _batch = batch;
+            this.Camera = camera;
         }
 
         /// <summary>

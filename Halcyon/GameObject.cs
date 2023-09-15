@@ -47,6 +47,11 @@ namespace Lib
         public GameObjectPool pool => GameObjectPool.Main;
 
         /// <summary>
+        /// The camera class
+        /// </summary>
+        public Camera camera => pool.Camera;
+
+        /// <summary>
         /// Is this object enabled?
         /// </summary>
         public bool Enabled
@@ -150,13 +155,13 @@ namespace Lib
             if (!Visible || !Enabled)
                 return;
 
-            DrawObject(gameTime);
+            DrawObject(gameTime, camera.position, camera.rotation);
         }
 
         /// <summary>
         /// Draw the game object
         /// </summary>
-        protected abstract void DrawObject(GameTime time);
+        protected abstract void DrawObject(GameTime time, Vector2 cameraPositionOffset, float cameraRotationOffset);
 
         #endregion
 

@@ -23,12 +23,12 @@ namespace Lib
         /// <summary>
         /// Paralax value
         /// </summary>
-        public float Paralax = 0;
+        public float Paralax = 2;
 
         /// <summary>
         /// the sprite type
         /// </summary>
-        public SpriteType Type = SpriteType.UI;
+        public SpriteType WorldType = SpriteType.Props;
 
         /// <summary>
         /// the sprite rect
@@ -56,9 +56,26 @@ namespace Lib
         /// <summary>
         /// The Draw object method
         /// </summary>
-        protected override void DrawObject(GameTime time)
+        protected override void DrawObject(GameTime time, Vector2 cameraPositionOffset, float rotationOffset)
         {
-            batch.Draw(Atlas, transform.position + transform.origin, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
+            if(WorldType == SpriteType.Forground)
+            {
+                cameraPositionOffset.X *= Paralax + 1;
+                cameraPositionOffset.Y *= Paralax + 1;
+            }
+
+            if(WorldType == SpriteType.UI)
+            {
+                cameraPositionOffset = Vector2.Zero;
+            }
+
+            if (WorldType == SpriteType.Background)
+            {
+                cameraPositionOffset.X *= -Paralax + 1;
+                cameraPositionOffset.Y *= -Paralax + 1;
+            }
+
+            batch.Draw(Atlas, transform.position + transform.origin - cameraPositionOffset, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
         }
     }
 
@@ -67,6 +84,6 @@ namespace Lib
         UI,
         Forground,
         Background,
-        Interactive
+        Props
     }
 }

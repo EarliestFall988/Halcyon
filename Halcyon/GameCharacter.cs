@@ -172,14 +172,14 @@ namespace Lib
             transform.Translate(finalVector);
         }
 
-        protected override void DrawObject(GameTime time)
+        protected override void DrawObject(GameTime time, Vector2 cameraPositionOffset, float rotationOffset)
         {
             if (Atlas == null)
                 throw new Exception("Atlas is null");
             if (_currentState == null)
                 throw new Exception("Current state is null");
 
-            _currentState.DrawObject(time, effect, Atlas, batch, this);
+            _currentState.DrawObject(time, effect, Atlas, batch, this, cameraPositionOffset, rotationOffset);
         }
     }
 
@@ -193,7 +193,7 @@ namespace Lib
         public List<Rectangle> frames { get; set; } = new List<Rectangle>();
 
 
-        public void DrawObject(GameTime time, SpriteEffects effect, Texture2D atlas, SpriteBatch batch, GameObject gameObject)
+        public void DrawObject(GameTime time, SpriteEffects effect, Texture2D atlas, SpriteBatch batch, GameObject gameObject, Vector2 cameraPositionOffset, float cameraRotationOffset)
         {
             if (atlas == null)
                 throw new Exception("atlas is null");
@@ -221,7 +221,7 @@ namespace Lib
                 currentFrame = 0;
             }
 
-            batch.Draw(atlas, gameObject.transform.position + gameObject.transform.origin, frames[currentFrame], color, gameObject.transform.rotation, gameObject.transform.origin, gameObject.transform.scaleValue, effect, gameObject.LayerValue);
+            batch.Draw(atlas, gameObject.transform.position + gameObject.transform.origin - cameraPositionOffset, frames[currentFrame], color, gameObject.transform.rotation - cameraRotationOffset, gameObject.transform.origin, gameObject.transform.scaleValue, effect, gameObject.LayerValue);
             _animatedSpriteSpeedTime += (float)time.ElapsedGameTime.TotalSeconds;
         }
     }
