@@ -18,6 +18,8 @@ namespace Lib
         public float movementSpeed = 4;
         public float runSpeed = 7;
 
+        private bool breatheIn = false;
+
         public float jumpHeight = 5;
 
         public float VelocityX = 0;
@@ -82,7 +84,7 @@ namespace Lib
 
             VelocityY += 9.8f * (float)time.ElapsedGameTime.TotalSeconds;
 
-            if (transform.position.Y >= 100 && VelocityY > 0)
+            if (transform.position.Y >= 163 && VelocityY > 0)
             {
                 VelocityY = 0;
                 grounded = true;
@@ -110,7 +112,61 @@ namespace Lib
                 }
             }
 
-            float finalHorizontalMovementSpeed = Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Math.Abs(VelocityX) >= 0.98f ? (VelocityX * runSpeed) : (VelocityX * movementSpeed);
+            float finalHorizontalMovementSpeed = VelocityX * movementSpeed;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Math.Abs(VelocityX) >= 0.98f)
+            {
+                finalHorizontalMovementSpeed = (VelocityX * runSpeed);
+
+                
+            }
+            
+            if (grounded)
+            {
+                if(transform.rotation <= MathHelper.ToRadians(1))
+                {
+                      transform.rotation += MathHelper.ToRadians(30) * (float)time.ElapsedGameTime.TotalSeconds;
+                }
+                else if(transform.rotation >= MathHelper.ToRadians(1))
+                {
+                    transform.rotation -= MathHelper.ToRadians(30) * (float)time.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    transform.rotation = MathHelper.ToRadians(1) * VelocityX;
+                }
+            }
+
+            if (!grounded)
+            {
+                transform.rotation = MathHelper.ToRadians(15 * VelocityX);
+            }
+
+            if (Math.Abs(VelocityX) < 0.125f && MathF.Abs(VelocityY) < 0.125f)
+            {
+                if (transform.scaleValue >= 0.52f)
+                {
+                    breatheIn = false;
+                }
+                else if(transform.scaleValue <= 0.50f)
+                {
+                    breatheIn = true;
+                }
+
+                if(breatheIn)
+                {
+                    transform.scaleValue += 0.0225f * (float)time.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    transform.scaleValue -= 0.0225f * (float)time.ElapsedGameTime.TotalSeconds;
+                }
+            }
+            else
+            {
+                transform.scaleValue = 0.5f;
+            }
+
 
             Vector2 finalVector = new Vector2(finalHorizontalMovementSpeed, VelocityY);
             transform.Translate(finalVector);

@@ -21,6 +21,16 @@ namespace Lib
         public Texture2D Atlas;
 
         /// <summary>
+        /// Paralax value
+        /// </summary>
+        public float Paralax = 0;
+
+        /// <summary>
+        /// the sprite type
+        /// </summary>
+        public SpriteType Type = SpriteType.UI;
+
+        /// <summary>
         /// the sprite rect
         /// </summary>
         public Rectangle SpriteLocation;
@@ -29,7 +39,6 @@ namespace Lib
         /// The sprite effect
         /// </summary>
         public SpriteEffects Effect = SpriteEffects.None;
-
 
         /// <summary>
         /// The color of the sprite
@@ -51,5 +60,13 @@ namespace Lib
         {
             batch.Draw(Atlas, transform.position + transform.origin, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
         }
+    }
+
+    public enum SpriteType
+    {
+        UI,
+        Forground,
+        Background,
+        Interactive
     }
 }

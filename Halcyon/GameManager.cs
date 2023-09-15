@@ -15,11 +15,15 @@ namespace Lib
     {
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
+        public static readonly string p_PlatformerReduxBackground = "Kenney Platformer Redux/PNG/Backgrounds/blue_grass";
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         private Texture2D _genericObjectsAtlas;
         private Texture2D _platformerReduxAtlas;
+        private Texture2D _platformerReduxBackground;
+
         public static ContentManager RootContent;
         public GameObjectPool GameObjectPool;
 
@@ -75,29 +79,9 @@ namespace Lib
             timeline.Loop = true;
         }
 
-        protected override void LoadContent()
+
+        void SetupCharacter()
         {
-            //ExampleCodeToLoadAndRun();
-
-            _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
-
-            //var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(100, 100), 0, new Vector2(52, 68) / 2);
-            //atlasSpriteTest.Atlas = _platformerReduxAtlas;
-            //atlasSpriteTest.SpriteLocation = new Rectangle(780, 774, 128, 256);
-
-            //AnimatedSprite sprite = new AnimatedSprite(new Vector2(128, 256) / 2)
-            //{
-            //    Atlas = _platformerReduxAtlas,
-            //    frames = new List<Rectangle>()
-            //    {
-            //        new Rectangle(780,774,128,256),
-            //        new Rectangle(780,516,128,256)
-            //    }
-            //};
-
-            //sprite.transform.position = new Vector2(100, 200);
-            //sprite.transform.scaleValue = 1f;
-
             GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2)
             {
                 Atlas = _platformerReduxAtlas,
@@ -108,7 +92,7 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(780,1548,128,256),
+                                new Rectangle(650,516,128,256),
                             }
                         }
                     },
@@ -117,7 +101,7 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(910,774,128,256),
+                                new Rectangle(650,1548,128,256),
                             }
                         }
                     },
@@ -126,7 +110,7 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(910,258,128,256),
+                                new Rectangle(650,1032,128,256),
                             }
                         }
                     },
@@ -135,7 +119,7 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(910,0,128,256),
+                                new Rectangle(650,774,128,256),
                             }
                         }
                     },
@@ -144,18 +128,82 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(780,774,128,256),
-                                new Rectangle(780,516,128,256)
+                                new Rectangle(520,1548,128,256),
+                                new Rectangle(520,1290,128,256)
                             }
                         }
                     }
                 }
             };
-            character.transform.position = new Vector2(100, 200);
+            character.transform.position = new Vector2(100, 0);
             character.transform.scaleValue = 1f;
             character.name = "character";
+            character.transform.scaleValue = 0.5f;
+        }
 
-            // TODO: use this.Content to load your game content here
+
+        void CreateGround()
+        {
+            for (int k = 0; k < 4; k++)
+            {
+
+                for (int i = 0; i < 15; i++)
+                {
+                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128 * i / 2, 355 + 128 * k / 2), 0, Vector2.Zero);
+                    atlasSpriteTest.Atlas = _platformerReduxAtlas;
+                    if (k == 0)
+                    {
+                        atlasSpriteTest.SpriteLocation = new Rectangle(1560, 390, 128, 128);
+                    }
+                    else
+                    {
+                        atlasSpriteTest.SpriteLocation = new Rectangle(1690, 390, 128, 128);
+                    }
+                    atlasSpriteTest.transform.scaleValue = 0.5f;
+                }
+            }
+        }
+
+        protected override void LoadContent()
+        {
+            //ExampleCodeToLoadAndRun();
+
+            _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
+            _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
+
+            var backgroundSprite = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(0, 0), 0, Vector2.Zero);
+            backgroundSprite.Atlas = _platformerReduxBackground;
+            backgroundSprite.SpriteLocation = new Rectangle(0, 0, 1920, 1080);
+            backgroundSprite.transform.scaleValue = 0.5f;
+
+            var fence = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128, 355 - 128 / 2), 0, Vector2.Zero);
+            fence.Atlas = _platformerReduxAtlas;
+            fence.SpriteLocation = new Rectangle(2210, 780, 128, 128);
+            fence.transform.scaleValue = 0.5f;
+
+            var fence2 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128 + 128 / 2, 355 - 128 / 2), 0, Vector2.Zero);
+            fence2.Atlas = _platformerReduxAtlas;
+            fence2.SpriteLocation = new Rectangle(2210, 780, 128, 128);
+            fence2.transform.scaleValue = 0.5f;
+
+            var fence1 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(434, 355 - 128 / 2), 0, Vector2.Zero);
+            fence1.Atlas = _platformerReduxAtlas;
+            fence1.SpriteLocation = new Rectangle(2210, 650, 128, 128);
+            fence1.transform.scaleValue = 0.5f;
+
+            var bush = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(-5, 355 - 128 / 2), 0, Vector2.Zero);
+            bush.Atlas = _platformerReduxAtlas;
+            bush.SpriteLocation = new Rectangle(2210, 1690, 128, 128);
+            bush.transform.scaleValue = 0.5f;
+
+            var rock = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(569, 355 - 128 / 2), 0, Vector2.Zero);
+            rock.Atlas = _platformerReduxAtlas;
+            rock.SpriteLocation = new Rectangle(2080, 390, 128, 128);
+            rock.transform.scaleValue = 0.5f;
+
+            SetupCharacter();
+            CreateGround();
+
         }
 
         protected override void Update(GameTime gameTime)

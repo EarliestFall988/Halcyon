@@ -156,6 +156,8 @@ namespace Lib
         /// <param name="vector">the position</param>
         public void Translate(Vector2 vector)
         {
+                
+
             position = position + vector;
         }
 
