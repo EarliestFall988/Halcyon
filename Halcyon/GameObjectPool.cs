@@ -62,7 +62,7 @@ namespace Lib
         /// <remarks>This object will spawn at (100,100) and have an origin point of (0,0)</remarks>
         public T SpawnObject<T>(T obj) where T : GameObject
         {
-            return SpawnObject<T>(obj, new Vector2(100, 100), 0, Vector2.Zero);
+            return SpawnObject<T>(obj, new Vector2(100, 100), 0, Vector2.One * 100);
         }
 
         /// <summary>

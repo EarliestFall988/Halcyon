@@ -98,7 +98,7 @@ namespace Lib
             //sprite.transform.position = new Vector2(100, 200);
             //sprite.transform.scaleValue = 1f;
 
-            GameCharacter character = new()
+            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2)
             {
                 Atlas = _platformerReduxAtlas,
                 States = new Dictionary<string, CharacterState>()
@@ -108,8 +108,34 @@ namespace Lib
                         {
                             frames = new List<Rectangle>()
                             {
-                                new Rectangle(780,774,128,256),
-                                new Rectangle(780,516,128,256)
+                                new Rectangle(780,1548,128,256),
+                            }
+                        }
+                    },
+                    {
+                        "duck", new CharacterState()
+                        {
+                            frames = new List<Rectangle>()
+                            {
+                                new Rectangle(910,774,128,256),
+                            }
+                        }
+                    },
+                    {
+                        "hit", new CharacterState()
+                        {
+                            frames = new List<Rectangle>()
+                            {
+                                new Rectangle(910,258,128,256),
+                            }
+                        }
+                    },
+                    {
+                        "jump", new CharacterState()
+                        {
+                            frames = new List<Rectangle>()
+                            {
+                                new Rectangle(910,0,128,256),
                             }
                         }
                     },
@@ -125,7 +151,9 @@ namespace Lib
                     }
                 }
             };
-            character.transform.scaleValue = 1;
+            character.transform.position = new Vector2(100, 200);
+            character.transform.scaleValue = 1f;
+            character.name = "character";
 
             // TODO: use this.Content to load your game content here
         }

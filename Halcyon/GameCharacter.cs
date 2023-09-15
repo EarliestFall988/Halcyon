@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +13,17 @@ namespace Lib
 {
     public class GameCharacter : GameObject
     {
-        private float lerpTime = 1;
-        public float speed = 5;
+        private float speedUpTime = 4f;
+        private float breakSpeedTime = 4f;
+        public float movementSpeed = 4;
+        public float runSpeed = 7;
 
-        public float jumpHeight;
+        public float jumpHeight = 5;
 
         public float VelocityX = 0;
         public float VelocityY = 0;
 
+        private bool grounded = false;
 
         public Texture2D Atlas;
 
@@ -28,9 +32,63 @@ namespace Lib
         public SpriteEffects effect { get; set; } = SpriteEffects.None;
         public Dictionary<string, CharacterState> States { get; set; } = new Dictionary<string, CharacterState>();
 
-        public GameCharacter()
+        public GameCharacter(Vector2 origin)
         {
-            pool.SpawnObject(this);
+            pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
+        }
+
+        private void HorizontalMovement(GameTime time)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+
+                VelocityX -= speedUpTime * (float)time.ElapsedGameTime.TotalSeconds;
+
+                effect = SpriteEffects.FlipHorizontally;
+                if (grounded) _currentState = States["walk"];
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D) && !Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+
+                VelocityX += speedUpTime * (float)time.ElapsedGameTime.TotalSeconds;
+
+                effect = SpriteEffects.None;
+                if (grounded) _currentState = States["walk"];
+            }
+            else
+            {
+                if (VelocityX > 0.125)
+                    VelocityX -= breakSpeedTime * (float)time.ElapsedGameTime.TotalSeconds;
+                else if (VelocityX < -0.125)
+                    VelocityX += breakSpeedTime * (float)time.ElapsedGameTime.TotalSeconds;
+                else
+                    VelocityX = 0;
+
+                if (grounded) _currentState = States["idle"];
+            }
+
+            if (!grounded) _currentState = States["jump"];
+
+            VelocityX = MathHelper.Clamp(VelocityX, -1, 1);
+        }
+
+        private void VerticalMovment(GameTime time)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.W) && grounded)
+            {
+                VelocityY = -jumpHeight;
+                grounded = false;
+            }
+
+            VelocityY += 9.8f * (float)time.ElapsedGameTime.TotalSeconds;
+
+            if (transform.position.Y >= 100 && VelocityY > 0)
+            {
+                VelocityY = 0;
+                grounded = true;
+            }
+
+            //VelocityY = MathHelper.Clamp(VelocityY, -1, 1);
         }
 
         protected override void UpdateObject(GameTime time)
@@ -38,36 +96,24 @@ namespace Lib
             if (States.Count == 0)
                 throw new Exception("States is empty");
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                if (VelocityX > -1)
-                    VelocityX -= lerpTime * (float)time.ElapsedGameTime.TotalSeconds;
+            VerticalMovment(time);
+            HorizontalMovement(time);
 
-                effect = SpriteEffects.FlipHorizontally;
-                _currentState = States["walk"];
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D) && !Keyboard.GetState().IsKeyDown(Keys.A))
+            if (grounded)
             {
-                if (VelocityX < 1)
-                    VelocityX += lerpTime * (float)time.ElapsedGameTime.TotalSeconds;
-
-                effect = SpriteEffects.None;
-                _currentState = States["walk"];
-            }
-            else
-            {
-                if (VelocityX > 0)
-                    VelocityX -= lerpTime * (float)time.ElapsedGameTime.TotalSeconds;
-                else if (VelocityX < 0)
-                    VelocityX += lerpTime * (float)time.ElapsedGameTime.TotalSeconds;
-
-                _currentState = States["idle"];
+                if (Math.Abs(VelocityX) <= 0.75f)
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.S))
+                    {
+                        _currentState = States["duck"];
+                    }
+                }
             }
 
-            var finalVector = new Vector2(VelocityX, VelocityY);
-            finalVector.Normalize();
+            float finalHorizontalMovementSpeed = Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Math.Abs(VelocityX) >= 0.98f ? (VelocityX * runSpeed) : (VelocityX * movementSpeed);
 
-            transform.Translate(finalVector * speed);
+            Vector2 finalVector = new Vector2(finalHorizontalMovementSpeed, VelocityY);
+            transform.Translate(finalVector);
         }
 
         protected override void DrawObject(GameTime time)
@@ -102,7 +148,7 @@ namespace Lib
             if (animatedSpriteSpeed <= 0)
                 throw new Exception("animatedSpriteSpeed is less than or equal to 0");
 
-            if (frames[0] == default)
+            if (frames[currentFrame] == default)
                 throw new Exception("the frames");
 
             if (batch == null)
@@ -112,16 +158,15 @@ namespace Lib
             {
                 _animatedSpriteSpeedTime = 0;
                 currentFrame++;
-
-                if (currentFrame >= frames.Count)
-                {
-                    currentFrame = 0;
-                }
-
-                batch.Draw(atlas, gameObject.transform.position + gameObject.transform.origin, frames[currentFrame], color, gameObject.transform.rotation, gameObject.transform.origin, gameObject.transform.scaleValue, effect, gameObject.LayerValue);
-
-                _animatedSpriteSpeedTime += (float)time.ElapsedGameTime.TotalSeconds;
             }
+
+            if (currentFrame >= frames.Count)
+            {
+                currentFrame = 0;
+            }
+
+            batch.Draw(atlas, gameObject.transform.position + gameObject.transform.origin, frames[currentFrame], color, gameObject.transform.rotation, gameObject.transform.origin, gameObject.transform.scaleValue, effect, gameObject.LayerValue);
+            _animatedSpriteSpeedTime += (float)time.ElapsedGameTime.TotalSeconds;
         }
     }
 }
