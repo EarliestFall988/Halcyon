@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lib.Collision;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,6 +32,11 @@ namespace Lib
         /// The transform of the object
         /// </summary>
         public Transform transform { get; set; }
+
+        /// <summary>
+        /// the collider the game object has
+        /// </summary>
+        public ICollision collider { get; set; }
 
         /// <summary>
         /// the sprite batch

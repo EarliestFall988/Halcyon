@@ -8,13 +8,29 @@ using System.Threading.Tasks;
 
 namespace Lib.Collision
 {
-    public struct BoundingRectangle
+    /// <summary>
+    /// the bounding rectangle collider
+    /// </summary>
+    public struct BoundingRectangle : ICollision
     {
 
         public float X;
         public float Y;
         public float Width;
         public float Height;
+
+        Vector2 position
+        {
+            get => new Vector2(X, Y);
+            set
+            {
+                var x = value.X;
+                var y = value.Y;
+
+                X = x;
+                Y = y;
+            }
+        }
 
         public float Left => X;
         public float Right => X + Width;

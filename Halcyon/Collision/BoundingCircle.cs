@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace Lib.Collision
 {
-    public struct BoundingCircle
+    /// <summary>
+    /// Bounding circle collider
+    /// </summary>
+    public struct BoundingCircle : ICollision
     {
         /// <summary>
         /// The center of the circle
@@ -53,6 +56,11 @@ namespace Lib.Collision
         public bool CollidesWith(BoundingRectangle other)
         {
             return CollisionHelper.Collides(this, other);
+        }
+
+        public void Init(GameObject obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }
