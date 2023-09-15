@@ -41,18 +41,37 @@ namespace Lib
             }
         }
 
+        public GameObject TargetCharacter { get; set; }
+        public Vector2 CharacterCameraOffset { get; set; }
+
         private OpenSimplexNoise noise = new OpenSimplexNoise();
+
+        public bool HandheldCameraShakeEnabled { get; set; } = false;
+        public float HandheldCameraShakeFrequency { get; set; } = 1;
+        public float HandheldCameraShakeAmount { get; set; } = 1;
 
         private double iterator = 0;
         float lastIterationValueX = 0;
         float lastIterationValueY = 0;
         float lastRotationValue = 0;
 
-        public void HandheldCameraShake(GameTime time, float frequency = 1, float amount = 1)
+
+        public void UpdateCamera(GameTime time)
         {
-            float x = (float)noise.Evaluate(iterator, iterator) * amount * 5;
-            float y = (float)noise.Evaluate(-iterator, -iterator) * amount * 5;
-            float rotation = (float)noise.Evaluate(iterator, -iterator) * amount * 0.1f;
+            if (TargetCharacter != null)
+            {
+                position = TargetCharacter.transform.position + CharacterCameraOffset;
+            }
+
+            if (HandheldCameraShakeEnabled)
+                HandheldCameraShake(time);
+        }
+
+        private void HandheldCameraShake(GameTime time)
+        {
+            float x = (float)noise.Evaluate(iterator, iterator) * HandheldCameraShakeAmount * 5;
+            float y = (float)noise.Evaluate(-iterator, -iterator) * HandheldCameraShakeAmount * 5;
+            float rotation = (float)noise.Evaluate(iterator, -iterator) * HandheldCameraShakeAmount * 0.1f;
 
             _positionStore = new Vector2(_positionStore.X - lastIterationValueX + x, _positionStore.Y - lastIterationValueY + y);
             //_rotationStore = _rotationStore - lastRotationValue + rotation; <- need to revisit the rotation attribute later
@@ -61,7 +80,7 @@ namespace Lib
             lastIterationValueY = y;
             lastRotationValue = rotation;
 
-            iterator += frequency * 0.10 * time.ElapsedGameTime.TotalSeconds;
+            iterator += HandheldCameraShakeFrequency * 0.10 * time.ElapsedGameTime.TotalSeconds;
         }
     }
 }

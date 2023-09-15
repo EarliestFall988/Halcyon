@@ -23,7 +23,7 @@ namespace Lib
         /// <summary>
         /// Paralax value
         /// </summary>
-        public float Paralax = 2;
+        public float Paralax = 0.75f;
 
         /// <summary>
         /// the sprite type

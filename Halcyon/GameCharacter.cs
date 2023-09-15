@@ -26,6 +26,7 @@ namespace Lib
         public float VelocityY = 0;
 
         private bool grounded = false;
+        private bool running = false;
 
         public Texture2D Atlas;
 
@@ -117,11 +118,15 @@ namespace Lib
             if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Math.Abs(VelocityX) >= 0.98f)
             {
                 finalHorizontalMovementSpeed = (VelocityX * runSpeed);
-
-                
+                transform.rotation = MathHelper.ToRadians(10) * VelocityX;
+                running = true;
+            }
+            else
+            {
+                running = false;
             }
             
-            if (grounded)
+            if (grounded && !running)
             {
                 if(transform.rotation <= MathHelper.ToRadians(1))
                 {
@@ -133,10 +138,11 @@ namespace Lib
                 }
                 else
                 {
-                    transform.rotation = MathHelper.ToRadians(1) * VelocityX;
+                    transform.rotation = MathHelper.ToRadians(0);
                 }
             }
-
+            
+ 
             if (!grounded)
             {
                 transform.rotation = MathHelper.ToRadians(15 * VelocityX);
