@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Lib.Utilities
         public static int CurrentXP { get; set; } = 0;
 
 
-        private static int _currentCollectedCointsStore = 1;
+        private static int _currentCollectedCointsStore = 0;
 
         /// <summary>
         /// the current amount of coins the player has
@@ -34,6 +35,7 @@ namespace Lib.Utilities
             {
                 _currentCollectedCointsStore = value;
                 OnCurrentCollectedCoinsChanged?.Invoke(value);
+                Debug.WriteLine("current collected: " + value);
             }
         }
 

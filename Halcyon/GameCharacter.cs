@@ -35,9 +35,9 @@ namespace Lib
         public SpriteEffects effect { get; set; } = SpriteEffects.None;
         public Dictionary<string, CharacterState> States { get; set; } = new Dictionary<string, CharacterState>();
 
-        public GameCharacter(Vector2 origin, Vector2 topLeft, Vector2 bottomRight)
+
+        public GameCharacter(Vector2 origin)
         {
-            SetupBoxCollision(topLeft, bottomRight);
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
         }
 

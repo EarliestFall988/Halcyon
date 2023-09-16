@@ -13,7 +13,7 @@ namespace Lib.Collision
     /// <summary>
     /// the bounding rectangle collider
     /// </summary>
-    public struct BoundingRectangle : IGameObjectCollision
+    public class BoundingRectangle : IGameObjectCollision
     {
 
         public float X;
@@ -86,19 +86,22 @@ namespace Lib.Collision
 
         public void Init(Vector2 center, float width, float height, Transform transform)
         {
-            Vector2 top = center + new Vector2(-width, height) / 2;
-            X = top.X;
-            Y = top.Y;
-            Width = width;
-            Height = height;
+            //Vector2 top = center + new Vector2(-width, height) / 2;
+            //X = top.X;
+            //Y = top.Y;
+            //Width = width;
+            //Height = height;
 
-            offset = new Vector2(top.X - transform.position.X, top.Y - transform.position.Y);
+            //offset = new Vector2(top.X - transform.position.X, top.Y - transform.position.Y);
+
+            throw new NotImplementedException();
+
         }
 
         public void Update(Transform transform)
         {
-            X = transform.position.X + offset.X;
-            Y = transform.position.Y + offset.Y;
+            //X = transform.position.X + offset.X;
+            //Y = transform.position.Y + offset.Y;
         }
     }
 }

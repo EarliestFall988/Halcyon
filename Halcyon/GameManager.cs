@@ -107,7 +107,7 @@ namespace Lib
 
         private GameObject SetupCharacter()
         {
-            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2, new Vector2(100 - 128 / 2, 256 / 2), new Vector2(100 + 128 / 2, -256 / 2))
+            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2)
             {
                 Atlas = _platformerReduxAtlas,
                 States = new Dictionary<string, CharacterState>()
@@ -162,8 +162,15 @@ namespace Lib
             };
 
             character.name = "character";
-            character.tag = new Tag("Player");
+            character.tag = new Tag("player");
             character.transform.scaleValue = 0.5f;
+
+            character.colliders.AddRange(new List<IGameObjectCollision>()
+            {
+                new BoundingCircle(character.transform.position, character.transform.scaleValue * 128 / 2, character),
+                new BoundingCircle(character.transform.position + new Vector2(0, 40), character.transform.scaleValue * 128 / 2, character)
+            });
+
             return character;
         }
 
@@ -248,15 +255,15 @@ namespace Lib
             coin.SpriteLocation = new Rectangle(2730, 0, 128, 128);
             coin.transform.scaleValue = 0.5f;
             coin.tag = new Tag("coin");
-            coin.collider = new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin);
+            coin.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin) });
 
             TweenTimeline timeline = Tweening.NewTimeline();
             var positionProperty = timeline.AddVector2(coin.transform, nameof(coin.transform.position));
             var rotationProperty = timeline.AddFloat(coin.transform, nameof(coin.transform.rotation));
 
-            positionProperty.AddFrame(0, new Vector2(620, 310 - 128 / 3), Easing.Cubic.InOut);
-            positionProperty.AddFrame(1000, new Vector2(620, 310 - 128 / 2), Easing.Cubic.InOut);
-            positionProperty.AddFrame(2000, new Vector2(620, 310 - 128 / 3), Easing.Cubic.InOut);
+            positionProperty.AddFrame(0, new Vector2(620, 200 - 128 / 3), Easing.Cubic.InOut);
+            positionProperty.AddFrame(1000, new Vector2(620, 200 - 128 / 2), Easing.Cubic.InOut);
+            positionProperty.AddFrame(2000, new Vector2(620, 200 - 128 / 3), Easing.Cubic.InOut);
 
             rotationProperty.AddFrame(0, 0, Easing.Back.InOut);
             rotationProperty.AddFrame(700, MathHelper.ToRadians(270), Easing.Back.InOut);
@@ -269,7 +276,7 @@ namespace Lib
             coin1.SpriteLocation = new Rectangle(2730, 0, 128, 128);
             coin1.transform.scaleValue = 0.5f;
             coin1.tag = new Tag("coin");
-            coin1.collider = new BoundingCircle(coin1.transform.position, coin.transform.scaleValue * 128 / 2, coin1);
+            coin1.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin1.transform.position, coin1.transform.scaleValue * 128 / 2, coin1) });
 
             TweenTimeline timeline1 = Tweening.NewTimeline();
             var positionProperty1 = timeline1.AddVector2(coin1.transform, nameof(coin1.transform.position));
@@ -385,6 +392,38 @@ namespace Lib
             for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)
             {
                 GameObjectPool.GameObjectsToUpdate[i].Update(gameTime);
+            }
+
+            var gameObjects = GameObjectPool.AllObjects.FindAll(x => x.colliders.Count > 0 && x.Enabled);
+            List<IGameObjectCollision> cols = new List<IGameObjectCollision>();
+
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                cols.AddRange(gameObjects[i].colliders);
+            }
+
+            for (int i = 0; i < cols.Count; i++)
+            {
+                for (int k = 0; k < cols.Count; k++)
+                {
+                    if (cols[i] == cols[k])
+                    {
+                        continue;
+                    }
+
+                    var result = CollisionHelper.Collides(cols[i], cols[k]);
+
+                    if (result.collision)
+                    {
+                        Debug.WriteLine(result.a.gameObject.tag.name + " collided with " + result.b.gameObject.tag.name);
+
+                        if (result.a.gameObject.tag.name == "player" && result.b.gameObject.tag.name == "coin")
+                        {
+                            result.b.gameObject.SetActive(false);
+                            PlayerProgression.IncrementCoinsCollected();
+                        }
+                    }
+                }
             }
 
             _camera.UpdateCamera(gameTime); // camera shake and movement with the character

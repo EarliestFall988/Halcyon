@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,34 @@ namespace Lib.Collision
     public class CollisionHelper
     {
         /// <summary>
+        /// parses the interface into interatible collisions
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static (bool collision, IGameObjectCollision a, IGameObjectCollision b) Collides(IGameObjectCollision a, IGameObjectCollision b)
+        {
+            if (a is BoundingCircle && b is BoundingCircle)
+            {
+                return (Collides(a as BoundingCircle, b as BoundingCircle), a, b);
+            }
+            else if (a is BoundingRectangle && b is BoundingRectangle)
+            {
+                return (Collides(a as BoundingRectangle, b as BoundingRectangle), a, b);
+            }
+            else if (a is BoundingCircle && b is BoundingRectangle)
+            {
+                return (Collides(a as BoundingCircle, b as BoundingRectangle), a, b);
+            }
+            else if (a is BoundingRectangle && b is BoundingCircle)
+            {
+                return (Collides(a as BoundingRectangle, b as BoundingCircle), a, b);
+            }
+
+            return (false, a, b);
+        }
+
+        /// <summary>
         /// Detects collisions between two circles
         /// </summary>
         /// <param name="a">the first bounding circle</param>
@@ -18,7 +47,14 @@ namespace Lib.Collision
         /// <returns>retunrs true if there is a collision, false if not</returns>
         public static bool Collides(BoundingCircle a, BoundingCircle b)
         {
-            return Math.Pow(a.Radius + b.Radius, 2) >= Math.Pow(a.Center.X - b.Center.X, 2) + Math.Pow(a.Center.Y - b.Center.Y, 2);
+            //Debug.WriteLine(a.Center + " " + b.Center);
+
+            bool result = Math.Pow(a.Radius + b.Radius, 2) >= Math.Pow(a.Center.X - b.Center.X, 2) + Math.Pow(a.Center.Y - b.Center.Y, 2);
+
+            Debug.WriteLineIf(result, "Collision detected");
+
+            return result;
+
         }
 
         /// <summary>

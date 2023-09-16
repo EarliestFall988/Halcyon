@@ -14,7 +14,7 @@ namespace Lib.Collision
     /// <summary>
     /// Bounding circle collider
     /// </summary>
-    public struct BoundingCircle : IGameObjectCollision
+    public class BoundingCircle : IGameObjectCollision
     {
 
         private Vector2 _centerStore;
@@ -37,7 +37,7 @@ namespace Lib.Collision
         /// <summary>
         /// The radius of the circle
         /// </summary>
-        public float Radius => _radius * scale;
+        public float Radius => _radius;
 
 
         public Vector2 offset { get; set; } = Vector2.Zero;
@@ -53,11 +53,14 @@ namespace Lib.Collision
         /// <param name="radius">the radius of the circle</param>
         public BoundingCircle(Vector2 center, float radius, GameObject obj)
         {
-            _centerStore = center;
-            _radius = radius;
-            gameObject = obj;
 
-            offset = center - (obj.transform.position);
+            offset = center - obj.transform.position + obj.transform.origin;
+
+            _centerStore = obj.transform.position + offset;
+            _radius = radius * obj.transform.scaleValue;
+            gameObject = obj;
+  
+            Debug.WriteLine($"radius ({obj.tag.name}): " + _radius);
 
             DebugHelper.Main.Collisions.Add(this); // this is for debugging purposes
         }
@@ -105,7 +108,9 @@ namespace Lib.Collision
         public void Update(Transform transform)
         {
             _centerStore = transform.position + offset;
-            Debug.WriteLine("updating circle");
+            //_centerStore = transform.position;
+            //Debug.WriteLine(transform.position + offset);
+            //Debug.WriteLine(_centerStore + offset);
         }
     }
 }

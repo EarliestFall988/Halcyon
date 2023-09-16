@@ -23,7 +23,7 @@ namespace Lib.Utilities
         public Texture2D debugCircle { get; private set; }
         public Texture2D debugDot { get; set; }
 
-        public bool ShowCollisions { get; set; } = true;
+        public bool ShowCollisions { get; set; } = false;
 
         private SpriteBatch _spriteBatch;
 
@@ -61,19 +61,31 @@ namespace Lib.Utilities
             {
                 for (int i = 0; i < Collisions.Count; i++)
                 {
+                    if (!Collisions[i].gameObject.Enabled)
+                        continue;
+
                     if (Collisions[i] is BoundingRectangle r)
                     {
-                        _spriteBatch.Draw(debugDot, new Vector2(r.X, r.Y) + r.gameObject.transform.position - _camera.position, Color.Red);
-                        _spriteBatch.Draw(debugDot, new Vector2(r.X + 128 / 2, r.Y) + r.gameObject.transform.position - _camera.position, Color.Orange);
-                        _spriteBatch.Draw(debugDot, new Vector2(r.X + 128 / 2, r.Y + 128 / 2) + r.gameObject.transform.position - _camera.position, Color.Yellow);
-                        _spriteBatch.Draw(debugDot, new Vector2(r.X, r.Y + 128 / 2) + r.gameObject.transform.position - _camera.position, Color.Purple);
+                        _spriteBatch.Draw(debugDot, new Vector2(r.X, r.Y) - _camera.position, Color.Red);
+                        _spriteBatch.Draw(debugDot, new Vector2(r.X + r.Width, r.Y) - _camera.position, Color.Orange);
+                        _spriteBatch.Draw(debugDot, new Vector2(r.X + r.Width, r.Y + r.Height) - _camera.position, Color.Yellow);
+                        _spriteBatch.Draw(debugDot, new Vector2(r.X, r.Y + r.Height) - _camera.position, Color.Purple);
 
                     }
                     else if (Collisions[i] is BoundingCircle c)
                     {
-                        //do nothing for now
-                        _spriteBatch.Draw(debugDot, c.Center - c.offset - _camera.position, Color.Magenta);
-                        //Debug.WriteLine(c.Center - (c.gameObject.transform.position + c.gameObject.transform.origin));
+                        _spriteBatch.Draw(debugDot, c.Center - _camera.position, Color.Magenta);
+                        //for (double k = 0; k <= 2 * Math.PI; k += 0.1)
+                        //{
+                        _spriteBatch.Draw(debugDot, c.Center + new Vector2(-c.Radius, -c.Radius) - _camera.position, Color.Magenta);
+                        _spriteBatch.Draw(debugDot, c.Center + new Vector2(-c.Radius, c.Radius) - _camera.position, Color.Magenta);
+                        _spriteBatch.Draw(debugDot, c.Center + new Vector2(c.Radius, -c.Radius) - _camera.position, Color.Magenta);
+                        _spriteBatch.Draw(debugDot, c.Center + new Vector2(c.Radius, c.Radius) - _camera.position, Color.Magenta);
+                        //}
+                        //_spriteBatch.Draw(debugDot, c.Center + new Vector2(c.Radius * (float)Math.Cos(2 * MathHelper.Pi / 4), -c.Radius * (float)Math.Sin(2 * MathHelper.Pi / 4)) - _camera.position, Color.Magenta);
+                        //_spriteBatch.Draw(debugDot, c.Center + new Vector2(-c.Radius * (float)Math.Cos(3 * MathHelper.Pi / 4), c.Radius * (float)Math.Sin( 3 * MathHelper.Pi / 4)) - _camera.position, Color.Magenta);
+                        //_spriteBatch.Draw(debugDot, c.Center + new Vector2(-c.Radius * (float)Math.Cos(4 * MathHelper.Pi / 4), -c.Radius * (float)Math.Sin(4 * MathHelper.Pi / 4)) - _camera.position, Color.Magenta);
+
                     }
                 }
             }
