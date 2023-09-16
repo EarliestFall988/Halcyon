@@ -27,4 +27,4 @@
 - [Open Simplex Noise by digitalshadow](https://gist.github.com/digitalshadow/134a3a02b67cecd72181) - A noise script for the camera shake (Creative Commons).
 - Kenney
   -  [Kenney Generic Items](https://kenney.nl/assets/generic-items) - 2d Graphics textures - used for framework testing, not in-game. (Creative Commons CC0)
-  -  [Kenney Platformer Redux]([https://kenney.nl/assets/generic-items](https://kenney.nl/assets/platformer-pack-redux)https://kenney.nl/assets/platformer-pack-redux) - 2d Graphics Platformer textures. (Creative Commons CC0)
+  -  [Kenney Platformer Redux](https://kenney.nl/assets/generic-items](https://kenney.nl/assets/platformer-pack-redux)https://kenney.nl/assets/platformer-pack-redux) - 2d Graphics Platformer textures. (Creative Commons CC0)
