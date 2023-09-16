@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lib.Utilities;
+
+using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ namespace Lib.Collision
     /// <summary>
     /// the bounding rectangle collider
     /// </summary>
-    public struct BoundingRectangle : ICollision
+    public struct BoundingRectangle : IGameObjectCollision
     {
 
         public float X;
@@ -19,7 +21,7 @@ namespace Lib.Collision
         public float Width;
         public float Height;
 
-        Vector2 position
+        public Vector2 position
         {
             get => new Vector2(X, Y);
             set
@@ -37,21 +39,32 @@ namespace Lib.Collision
         public float Top => Y;
         public float Bottom => Y + Height;
 
-        public BoundingRectangle(float x, float y, float width, float height)
+        public Vector2 offset { get; set; } = Vector2.Zero;
+        public float rotation { get; set; } = 0;
+        public float scale { get; set; } = 0;
+
+        public GameObject gameObject { get; private set; }
+
+        public BoundingRectangle(float x, float y, float width, float height, GameObject obj)
         {
             X = x;
             Y = y;
             Width = width;
             Height = height;
+            gameObject = obj;
 
+            DebugHelper.Main.Collisions.Add(this); // adding the collision to the list of collisions for visual debugging
         }
 
-        public BoundingRectangle(Vector2 position, float width, float height)
+        public BoundingRectangle(Vector2 position, float width, float height, GameObject obj)
         {
             X = position.X;
             Y = position.Y;
             Width = width;
             Height = height;
+            gameObject = obj;
+
+            DebugHelper.Main.Collisions.Add(this); // adding the collision to the list of collisions for visual debugging
         }
 
 
@@ -69,6 +82,23 @@ namespace Lib.Collision
         public bool CollidesWith(BoundingCircle other)
         {
             return CollisionHelper.Collides(this, other);
+        }
+
+        public void Init(Vector2 center, float width, float height, Transform transform)
+        {
+            Vector2 top = center + new Vector2(-width, height) / 2;
+            X = top.X;
+            Y = top.Y;
+            Width = width;
+            Height = height;
+
+            offset = new Vector2(top.X - transform.position.X, top.Y - transform.position.Y);
+        }
+
+        public void Update(Transform transform)
+        {
+            X = transform.position.X + offset.X;
+            Y = transform.position.Y + offset.Y;
         }
     }
 }

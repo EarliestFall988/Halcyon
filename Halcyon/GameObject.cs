@@ -36,7 +36,7 @@ namespace Lib
         /// <summary>
         /// the collider the game object has
         /// </summary>
-        public ICollision collider { get; set; }
+        public IGameObjectCollision collider { get; set; }
 
         /// <summary>
         /// the sprite batch
@@ -133,6 +133,15 @@ namespace Lib
 
         #endregion
 
+        #region collisions
+
+        public void SetupBoxCollision(Vector2 topLeft, Vector2 bottomRight)
+        {
+            collider = new BoundingRectangle(topLeft, topLeft.X + bottomRight.X, topLeft.Y - bottomRight.Y, this);
+        }
+
+        #endregion
+
         #region interface implementations 
 
         /// <summary>
@@ -144,6 +153,9 @@ namespace Lib
 
             if (!Enabled)
                 return;
+
+            if (collider != null)
+                collider.Update(transform);
 
             UpdateObject(gameTime);
         }

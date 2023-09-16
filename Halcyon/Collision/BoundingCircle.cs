@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lib.Utilities;
+
+using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +14,36 @@ namespace Lib.Collision
     /// <summary>
     /// Bounding circle collider
     /// </summary>
-    public struct BoundingCircle : ICollision
+    public struct BoundingCircle : IGameObjectCollision
     {
+
+        private Vector2 _centerStore;
+
         /// <summary>
         /// The center of the circle
         /// </summary>
-        public Vector2 Center;
+        public Vector2 Center
+        {
+            get => _centerStore;
+            set
+            {
+                _centerStore = value;
+            }
+        }
+
+
+        private float _radius = 1;
 
         /// <summary>
         /// The radius of the circle
         /// </summary>
-        public float Radius;
+        public float Radius => _radius * scale;
+
+
+        public Vector2 offset { get; set; } = Vector2.Zero;
+        public float rotation { get; set; } = 0;
+        public float scale { get; set; } = 0;
+        public GameObject gameObject { get; private set; }
 
 
         /// <summary>
@@ -29,11 +51,18 @@ namespace Lib.Collision
         /// </summary>
         /// <param name="center">the center of the circle</param>
         /// <param name="radius">the radius of the circle</param>
-        public BoundingCircle(Vector2 center, float radius)
+        public BoundingCircle(Vector2 center, float radius, GameObject obj)
         {
-            Center = center;
-            Radius = radius;
+            _centerStore = center;
+            _radius = radius;
+            gameObject = obj;
+
+            offset = center - (obj.transform.position);
+
+            DebugHelper.Main.Collisions.Add(this); // this is for debugging purposes
         }
+
+
 
 
         /// <summary>
@@ -44,7 +73,6 @@ namespace Lib.Collision
         public bool CollidesWith(BoundingCircle other)
         {
             return CollisionHelper.Collides(this, other);
-
 
         }
 
@@ -58,9 +86,26 @@ namespace Lib.Collision
             return CollisionHelper.Collides(this, other);
         }
 
-        public void Init(GameObject obj)
+        public void Init(Vector2 center, float width, float height, Transform transform)
         {
-            throw new NotImplementedException();
+            if (width != height)
+            {
+                Debug.WriteLine("the width and height are not the same - grabbing width");
+            }
+
+
+            //Center = center;
+            //_radius = width / 2;
+
+            //offset = transform.position - center;
+            //rotation = transform.rotation; //careful
+            //scale = transform.scaleValue;
+        }
+
+        public void Update(Transform transform)
+        {
+            _centerStore = transform.position + offset;
+            Debug.WriteLine("updating circle");
         }
     }
 }

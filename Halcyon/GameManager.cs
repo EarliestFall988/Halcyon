@@ -9,25 +9,38 @@ using System.Diagnostics;
 using Pleasing;
 using Lib.PleasingTweening;
 using Lib.Utilities;
+using Lib.Collision;
 
 namespace Lib
 {
     public class GameManager : Game
     {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
         public static readonly string p_PlatformerReduxBackground = "Kenney Platformer Redux/PNG/Backgrounds/blue_grass";
-
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
 
         private Texture2D _genericObjectsAtlas;
         private Texture2D _platformerReduxAtlas;
         private Texture2D _platformerReduxBackground;
 
+        public static readonly string p_DebugBox = "Halcyon Debug Prmtvs/128_debug_box";
+        public static readonly string p_DebugCircle = "Halcyon Debug Prmtvs/Debug Circle";
+        public static readonly string p_4px_dot = "Halcyon Debug Prmtvs/4px_dot";
+
+        private Texture2D _debugbox;
+        private Texture2D _debugcircle;
+        private Texture2D _debugDot;
+
+
         public static ContentManager RootContent;
         public GameObjectPool GameObjectPool;
         public Camera _camera = new();
+
+        public DebugHelper helper;
 
         public static GameTime Time;
 
@@ -47,6 +60,7 @@ namespace Lib
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             GameObjectPool = new GameObjectPool(_spriteBatch, _camera);
 
+
             _camera.HandheldCameraShakeEnabled = true;
             _camera.HandheldCameraShakeAmount = 2;
             _camera.HandheldCameraShakeFrequency = 3;
@@ -54,6 +68,9 @@ namespace Lib
 
             base.Initialize();
         }
+
+
+        #region content initialization
 
         /// <summary>
         /// This is the example code to load and run
@@ -90,7 +107,7 @@ namespace Lib
 
         private GameObject SetupCharacter()
         {
-            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2)
+            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2, new Vector2(100 - 128 / 2, 256 / 2), new Vector2(100 + 128 / 2, -256 / 2))
             {
                 Atlas = _platformerReduxAtlas,
                 States = new Dictionary<string, CharacterState>()
@@ -143,9 +160,9 @@ namespace Lib
                     }
                 }
             };
-            character.transform.position = new Vector2(100, 0);
-            character.transform.scaleValue = 1f;
+
             character.name = "character";
+            character.tag = new Tag("Player");
             character.transform.scaleValue = 0.5f;
             return character;
         }
@@ -230,6 +247,8 @@ namespace Lib
             coin.Atlas = _platformerReduxAtlas;
             coin.SpriteLocation = new Rectangle(2730, 0, 128, 128);
             coin.transform.scaleValue = 0.5f;
+            coin.tag = new Tag("coin");
+            coin.collider = new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin);
 
             TweenTimeline timeline = Tweening.NewTimeline();
             var positionProperty = timeline.AddVector2(coin.transform, nameof(coin.transform.position));
@@ -249,10 +268,12 @@ namespace Lib
             coin1.Atlas = _platformerReduxAtlas;
             coin1.SpriteLocation = new Rectangle(2730, 0, 128, 128);
             coin1.transform.scaleValue = 0.5f;
+            coin1.tag = new Tag("coin");
+            coin1.collider = new BoundingCircle(coin1.transform.position, coin.transform.scaleValue * 128 / 2, coin1);
 
             TweenTimeline timeline1 = Tweening.NewTimeline();
-            var positionProperty1 = timeline.AddVector2(coin1.transform, nameof(coin1.transform.position));
-            var rotationProperty1 = timeline.AddFloat(coin1.transform, nameof(coin1.transform.rotation));
+            var positionProperty1 = timeline1.AddVector2(coin1.transform, nameof(coin1.transform.position));
+            var rotationProperty1 = timeline1.AddFloat(coin1.transform, nameof(coin1.transform.rotation));
 
             positionProperty1.AddFrame(0, new Vector2(250, 310 - 128 / 3), Easing.Cubic.InOut);
             positionProperty1.AddFrame(1000, new Vector2(250, 310 - 128 / 2), Easing.Cubic.InOut);
@@ -324,19 +345,27 @@ namespace Lib
         }
 
 
+        #endregion
+
         protected override void LoadContent()
         {
-            //ExampleCodeToLoadAndRun();
+            _debugbox = Content.Load<Texture2D>(p_DebugBox);
+            _debugcircle = Content.Load<Texture2D>(p_DebugCircle);
+            _debugDot = Content.Load<Texture2D>(p_4px_dot);
+
+            helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, _spriteBatch, _camera);
 
             _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
             _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
 
             //z order applies here
+
+            //ExampleCodeToLoadAndRun();
+
             CreateDetails();
             var character = SetupCharacter();
             CreateGround();
             CreateUI();
-
 
 
             _camera.TargetCharacter = character;
@@ -358,7 +387,7 @@ namespace Lib
                 GameObjectPool.GameObjectsToUpdate[i].Update(gameTime);
             }
 
-            _camera.UpdateCamera(gameTime);
+            _camera.UpdateCamera(gameTime); // camera shake and movement with the character
 
 
             base.Update(gameTime);
@@ -378,6 +407,8 @@ namespace Lib
             {
                 GameObjectPool.GameObjectsToUpdate[i].Draw(gameTime);
             }
+
+            DebugHelper.Main.Draw(gameTime);
 
             _spriteBatch.End();
 

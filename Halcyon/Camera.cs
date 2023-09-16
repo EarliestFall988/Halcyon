@@ -64,10 +64,10 @@ namespace Lib
             }
 
             if (HandheldCameraShakeEnabled)
-                HandheldCameraShake(time);
+                CameraShake(time);
         }
 
-        private void HandheldCameraShake(GameTime time)
+        private void CameraShake(GameTime time)
         {
             float x = (float)noise.Evaluate(iterator, iterator) * HandheldCameraShakeAmount * 5;
             float y = (float)noise.Evaluate(-iterator, -iterator) * HandheldCameraShakeAmount * 5;

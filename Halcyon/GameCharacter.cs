@@ -35,8 +35,9 @@ namespace Lib
         public SpriteEffects effect { get; set; } = SpriteEffects.None;
         public Dictionary<string, CharacterState> States { get; set; } = new Dictionary<string, CharacterState>();
 
-        public GameCharacter(Vector2 origin)
+        public GameCharacter(Vector2 origin, Vector2 topLeft, Vector2 bottomRight)
         {
+            SetupBoxCollision(topLeft, bottomRight);
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
         }
 
@@ -125,14 +126,14 @@ namespace Lib
             {
                 running = false;
             }
-            
+
             if (grounded && !running)
             {
-                if(transform.rotation <= MathHelper.ToRadians(1))
+                if (transform.rotation <= MathHelper.ToRadians(1))
                 {
-                      transform.rotation += MathHelper.ToRadians(30) * (float)time.ElapsedGameTime.TotalSeconds;
+                    transform.rotation += MathHelper.ToRadians(30) * (float)time.ElapsedGameTime.TotalSeconds;
                 }
-                else if(transform.rotation >= MathHelper.ToRadians(1))
+                else if (transform.rotation >= MathHelper.ToRadians(1))
                 {
                     transform.rotation -= MathHelper.ToRadians(30) * (float)time.ElapsedGameTime.TotalSeconds;
                 }
@@ -141,8 +142,8 @@ namespace Lib
                     transform.rotation = MathHelper.ToRadians(0);
                 }
             }
-            
- 
+
+
             if (!grounded)
             {
                 transform.rotation = MathHelper.ToRadians(15 * VelocityX);
@@ -154,12 +155,12 @@ namespace Lib
                 {
                     breatheIn = false;
                 }
-                else if(transform.scaleValue <= 0.50f)
+                else if (transform.scaleValue <= 0.50f)
                 {
                     breatheIn = true;
                 }
 
-                if(breatheIn)
+                if (breatheIn)
                 {
                     transform.scaleValue += 0.0225f * (float)time.ElapsedGameTime.TotalSeconds;
                 }
