@@ -23,7 +23,7 @@ namespace Lib.Utilities
         public Texture2D debugCircle { get; private set; }
         public Texture2D debugDot { get; set; }
 
-        public bool ShowCollisions { get; set; } = false;
+        public bool showGizmos { get; set; } = false;
 
         private SpriteBatch _spriteBatch;
 
@@ -57,7 +57,7 @@ namespace Lib.Utilities
 
         public void Draw(GameTime gameTime)
         {
-            if (ShowCollisions)
+            if (showGizmos)
             {
                 for (int i = 0; i < Collisions.Count; i++)
                 {
