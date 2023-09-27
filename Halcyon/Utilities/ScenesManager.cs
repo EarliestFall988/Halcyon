@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -13,9 +16,9 @@ namespace Lib.Utilities
         /// <summary>
         /// the list of active scenes
         /// </summary>
-        private List<IScene> _activeScenes = new List<IScene>();
+        private List<IScene> _loadedScenes = new List<IScene>();
 
-        public IEnumerable<IScene> ActiveScenes => _activeScenes;
+        public IEnumerable<IScene> LoadedScenes => _loadedScenes;
 
         /// <summary>
         /// the dictionary of scenes
@@ -60,14 +63,15 @@ namespace Lib.Utilities
         /// Load the list of scenes
         /// </summary>
         /// <param name="listOfScenestoLoad">the list of scenes to unload</param>
-        public void LoadScenes(List<string> listOfScenestoLoad)
+        public void LoadScenes(List<string> listOfScenestoLoad, ContentManager contentManager)
         {
             foreach (var x in listOfScenestoLoad)
             {
-                if (_scenes.ContainsKey(x) && !_activeScenes.Contains(_scenes[x]))
+                if (_scenes.ContainsKey(x) && !_loadedScenes.Contains(_scenes[x]))
                 {
-                    _scenes[x].LoadContent(null);
-                    _activeScenes.Add(_scenes[x]);
+                    _scenes[x].Initialize();    
+                    _scenes[x].LoadContent(contentManager);
+                    _loadedScenes.Add(_scenes[x]);
                 }
             }
         }
@@ -81,11 +85,32 @@ namespace Lib.Utilities
         {
             foreach (var x in listOfScenesToUnload)
             {
-                if (_scenes.ContainsKey(x) && _activeScenes.Contains(_scenes[x]))
+                if (_scenes.ContainsKey(x) && _loadedScenes.Contains(_scenes[x]))
                 {
                     //unload the content??
-                    _activeScenes.Remove(_scenes[x]);
+                    _loadedScenes.Remove(_scenes[x]);
                 }
+            }
+        }
+
+
+        public void UpdateLoadedScenes(GameTime time)
+        {
+            for (int i = 0; i < _loadedScenes.Count; i++)
+            {
+                var scene = _loadedScenes[i];
+
+                scene.Update(time);
+            }
+        }
+
+        public void DrawLoadedScenes(GameTime time)
+        {
+            for (int i = 0; i < _loadedScenes.Count; i++)
+            {
+                var scene = _loadedScenes[i];
+
+                scene.Draw(time);
             }
         }
     }

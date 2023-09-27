@@ -10,6 +10,7 @@ using Pleasing;
 using Lib.PleasingTweening;
 using Lib.Utilities;
 using Lib.Collision;
+using Lib.Scenes;
 
 namespace Lib
 {
@@ -46,6 +47,7 @@ namespace Lib
         //public DebugHelper helper;
 
         public static GameTime Time;
+        static ScenesManager scenesManager;
 
         //public AtlasSprite CoinsCollectedSprite;
 
@@ -55,12 +57,24 @@ namespace Lib
             Content.RootDirectory = "Content";
             RootContent = Content;
             IsMouseVisible = true;
+
+           
+
+            
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+            scenesManager = new ScenesManager();
+            Scene1 firstScene = new Scene1(_graphics, _spriteBatch, Content);
+            scenesManager.AddScene(firstScene);
+
+            scenesManager.LoadScenes(new List<string>() { "First Scene" }, Content);
+
             //GameObjectPool = new GameObjectPool(_spriteBatch, _camera);
 
 
@@ -442,6 +456,7 @@ namespace Lib
 
             //_camera.UpdateCamera(gameTime); // camera shake and movement with the character
 
+            scenesManager.UpdateLoadedScenes(gameTime);
 
             base.Update(gameTime);
         }
@@ -465,6 +480,7 @@ namespace Lib
 
             //_spriteBatch.End();
 
+            scenesManager.DrawLoadedScenes(gameTime);
             base.Draw(gameTime);
         }
     }
