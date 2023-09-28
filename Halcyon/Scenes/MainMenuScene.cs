@@ -116,6 +116,18 @@ namespace Lib.Scenes
             exitButton.transform.scaleValue = 5;
         }
 
+        private void CreateBackground(int amt)
+        {
+            for (int i = 0; i < amt; i++)
+            {
+                var backgroundSprite = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((1920 / 2 * i) - 50, -60), 0, Vector2.Zero);
+                backgroundSprite.Atlas = _platformerReduxBackground;
+                backgroundSprite.SpriteLocation = new Rectangle(0, 0, 1920, 1080);
+                backgroundSprite.transform.scaleValue = 0.5f;
+                backgroundSprite.WorldType = SpriteType.Background;
+            }
+        }
+
         #endregion
 
         public void LoadContent(ContentManager contentManager)
@@ -133,6 +145,7 @@ namespace Lib.Scenes
             _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
             _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
 
+            CreateBackground(3);
             LoadButtons();
 
         }

@@ -23,7 +23,7 @@ namespace Lib.GUI_Elements
 
         #region colors
         public Color TextColor { get; set; } = Color.Black;
-        public Color EnabledColor { get; set; } = Color.White;
+        public Color EnabledColor { get; set; } = Color.Cyan;
         public Color DisabledColor { get; set; } = Color.Gray;
         #endregion
 
