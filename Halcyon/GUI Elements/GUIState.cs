@@ -14,6 +14,7 @@ namespace Lib.GUI_Elements
         Disabled,
         Enabled,
         Hovered,
+        Pressed,
         Clicked
     }
 }

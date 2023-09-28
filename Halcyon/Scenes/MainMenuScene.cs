@@ -9,9 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Lib.Scenes
 {
@@ -36,10 +34,15 @@ namespace Lib.Scenes
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
         public static readonly string p_PlatformerReduxBackground = "Kenney Platformer Redux/PNG/Backgrounds/blue_grass";
+        public static readonly string p_bg32x48 = "32x48button";
+        public static readonly string p_font_arial = "arial";
 
         private Texture2D _genericObjectsAtlas;
+        private Texture2D _pixelGUIAtlas;
         private Texture2D _platformerReduxAtlas;
         private Texture2D _platformerReduxBackground;
+
+        private SpriteFont _fontArial;
 
         public static readonly string p_DebugBox = "Halcyon Debug Prmtvs/128_debug_box";
         public static readonly string p_DebugCircle = "Halcyon Debug Prmtvs/Debug Circle";
@@ -97,11 +100,19 @@ namespace Lib.Scenes
 
         public void LoadButtons()
         {
-            _genericObjectsAtlas = Content.Load<Texture2D>(p_KenneyGenericObjects);
 
-            var button = GameObjectPool.SpawnObject(new Button("test", new Rectangle(688, 393, 52, 68)), new Vector2(100, 100), 0, new Vector2(52 / 68) / 2);
-            button.Atlas = _genericObjectsAtlas;
-            button.SpriteLocation = new Rectangle(688, 393, 52, 68);
+            var playButton = GameObjectPool.SpawnObject(new Button("Play", new Rectangle(0, 0, 48 / 2, 32 / 2), _fontArial), new Vector2(100, 100), 0, new Vector2(16 / 16) / 2);
+            playButton.Atlas = _pixelGUIAtlas;
+            playButton.transform.scaleValue = 5;
+            playButton.ButtonClickAction = () =>
+            {
+                GameManager.scenesManager.UnloadScenesByName(new List<string>() {"Main Menu"}, true);
+                GameManager.scenesManager.LoadScenesByName(new List<string>() { "First Scene" }, Content);
+            };
+
+            var exitButton = GameObjectPool.SpawnObject(new Button("Exit", new Rectangle(0, 0, 48 / 2, 32 / 2), _fontArial), new Vector2(100, 200), 0, new Vector2(16 / 16) / 2);
+            exitButton.Atlas = _pixelGUIAtlas;
+            exitButton.transform.scaleValue = 5;
         }
 
         #endregion
@@ -111,6 +122,9 @@ namespace Lib.Scenes
             _debugbox = Content.Load<Texture2D>(p_DebugBox);
             _debugcircle = Content.Load<Texture2D>(p_DebugCircle);
             _debugDot = Content.Load<Texture2D>(p_4px_dot);
+            _pixelGUIAtlas = Content.Load<Texture2D>(p_bg32x48);
+
+            _fontArial = Content.Load<SpriteFont>(p_font_arial);
 
             helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, SpriteBatch, Camera);
             helper.showGizmos = _drawVisualGizmos;
@@ -125,6 +139,7 @@ namespace Lib.Scenes
         public void UnloadContent()
         {
             GameObjectPool.Clear();
+            DebugHelper.Clear();
         }
 
         public void Draw(GameTime gameTime)

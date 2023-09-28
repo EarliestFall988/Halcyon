@@ -31,6 +31,7 @@ namespace Lib.Scenes
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
         public static readonly string p_PlatformerReduxBackground = "Kenney Platformer Redux/PNG/Backgrounds/blue_grass";
+        
 
         private Texture2D _genericObjectsAtlas;
         private Texture2D _platformerReduxAtlas;
@@ -413,6 +414,7 @@ namespace Lib.Scenes
         public void UnloadContent()
         {
             GameObjectPool.Clear();
+            DebugHelper.Clear();
         }
 
 

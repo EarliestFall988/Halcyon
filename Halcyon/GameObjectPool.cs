@@ -122,7 +122,10 @@ namespace Lib
         /// <summary>
         /// Clear the Game Object Pool
         /// </summary>
-        public void Clear()
+        /// <param name="removeStatic">
+        /// remove the static reference to the game object pool
+        /// </param>
+        public void Clear(bool removeStatic = true)
         {
             for (int i = 0; i < AllObjects.Count; i++)
             {
@@ -133,6 +136,11 @@ namespace Lib
             AllObjects.Clear();
             DisabledObjects.Clear();
             GameObjectsToUpdate.Clear();
+
+            if(removeStatic)
+            {
+                Main = null;
+            }
         }
 
         /// <summary>

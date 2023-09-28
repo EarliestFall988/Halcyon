@@ -87,7 +87,7 @@ namespace Lib.Utilities
         /// Because the scene system does not tag which content is used by which scene, it is up to the
         /// developer to manage the content.
         /// </remarks>
-        public void UnloadScenes(List<string> listOfScenesToUnload, bool hardUnload)
+        public void UnloadScenesByName(List<string> listOfScenesToUnload, bool hardUnload)
         {
             foreach (var x in listOfScenesToUnload)
             {

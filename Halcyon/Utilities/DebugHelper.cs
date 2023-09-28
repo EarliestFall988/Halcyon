@@ -90,5 +90,10 @@ namespace Lib.Utilities
                 }
             }
         }
+
+        public static void Clear()
+        {
+            Main = null;
+        }
     }
 }

@@ -39,6 +39,7 @@ namespace Lib
         public GameCharacter(Vector2 origin)
         {
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
+            
         }
 
         private void HorizontalMovement(GameTime time)
@@ -184,7 +185,7 @@ namespace Lib
             if (Atlas == null)
                 throw new Exception("Atlas is null");
             if (_currentState == null)
-                throw new Exception("Current state is null");
+                return;
 
             _currentState.DrawObject(time, effect, Atlas, batch, this, cameraPositionOffset, rotationOffset);
         }

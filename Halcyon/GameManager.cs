@@ -25,7 +25,7 @@ namespace Lib
         public static ContentManager RootContent;
 
         public static GameTime Time;
-        static ScenesManager scenesManager;
+        public static ScenesManager scenesManager;
 
         public GameManager()
         {
@@ -65,6 +65,8 @@ namespace Lib
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+    
 
             scenesManager.UpdateLoadedScenes(gameTime);
 
