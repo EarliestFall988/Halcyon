@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Lib.Scenes
 {
-    public class Scene1 : IScene
+    public class Game1Scene : IScene
     {
 
         public GraphicsDeviceManager _graphics { get; private set; }
@@ -45,9 +45,8 @@ namespace Lib.Scenes
         private Texture2D _debugDot;
         private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
-        public static ContentManager RootContent;
-        public GameObjectPool GameObjectPool;
-        public Camera _camera = new();
+        public GameObjectPool GameObjectPool { get; private set; }
+        public Camera Camera { get; private set; } = new();
 
         public DebugHelper helper;
 
@@ -55,7 +54,7 @@ namespace Lib.Scenes
 
         public AtlasSprite CoinsCollectedSprite;
 
-        public Scene1(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, ContentManager contentManager)
+        public Game1Scene(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, ContentManager contentManager)
         {
             _graphics = graphics;
             SpriteBatch = spriteBatch;
@@ -82,13 +81,13 @@ namespace Lib.Scenes
 
         public void Initialize()
         {
-            GameObjectPool = new GameObjectPool(SpriteBatch, _camera);
+            GameObjectPool = new GameObjectPool(SpriteBatch, Camera);
 
 
-            _camera.HandheldCameraShakeEnabled = true;
-            _camera.HandheldCameraShakeAmount = 2;
-            _camera.HandheldCameraShakeFrequency = 3;
-            _camera.CharacterCameraOffset = new Vector2(-200, -200);
+            Camera.HandheldCameraShakeEnabled = true;
+            Camera.HandheldCameraShakeAmount = 2;
+            Camera.HandheldCameraShakeFrequency = 3;
+            Camera.CharacterCameraOffset = new Vector2(-200, -200);
         }
 
         #region content initialization
@@ -391,7 +390,7 @@ namespace Lib.Scenes
             _debugcircle = Content.Load<Texture2D>(p_DebugCircle);
             _debugDot = Content.Load<Texture2D>(p_4px_dot);
 
-            helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, SpriteBatch, _camera);
+            helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, SpriteBatch, Camera);
             helper.showGizmos = _drawVisualGizmos;
 
             _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
@@ -407,11 +406,14 @@ namespace Lib.Scenes
             CreateUI();
 
 
-            _camera.TargetCharacter = character;
+            Camera.TargetCharacter = character;
         }
 
 
-
+        public void UnloadContent()
+        {
+            GameObjectPool.Clear();
+        }
 
 
         public void Update(GameTime gameTime)
@@ -462,7 +464,7 @@ namespace Lib.Scenes
                 }
             }
 
-            _camera.UpdateCamera(gameTime); // camera shake and movement with the character
+            Camera.UpdateCamera(gameTime); // camera shake and movement with the character
         }
 
 

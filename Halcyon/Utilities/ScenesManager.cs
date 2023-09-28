@@ -63,13 +63,13 @@ namespace Lib.Utilities
         /// Load the list of scenes
         /// </summary>
         /// <param name="listOfScenestoLoad">the list of scenes to unload</param>
-        public void LoadScenes(List<string> listOfScenestoLoad, ContentManager contentManager)
+        public void LoadScenesByName(List<string> listOfScenestoLoad, ContentManager contentManager)
         {
             foreach (var x in listOfScenestoLoad)
             {
                 if (_scenes.ContainsKey(x) && !_loadedScenes.Contains(_scenes[x]))
                 {
-                    _scenes[x].Initialize();    
+                    _scenes[x].Initialize();
                     _scenes[x].LoadContent(contentManager);
                     _loadedScenes.Add(_scenes[x]);
                 }
@@ -80,14 +80,25 @@ namespace Lib.Utilities
         /// <summary>
         /// the list of scenes to unload
         /// </summary>
+        /// <param name="hardUnload">unload all the content</param>
         /// <param name="listOfScenesToUnload">the list of scenes to unload</param>
-        public void UnloadScenes(List<string> listOfScenesToUnload)
+        /// <remarks>
+        /// The scenes can be unloaded, but the content will still be in memory if hardUnload is false.
+        /// Because the scene system does not tag which content is used by which scene, it is up to the
+        /// developer to manage the content.
+        /// </remarks>
+        public void UnloadScenes(List<string> listOfScenesToUnload, bool hardUnload)
         {
             foreach (var x in listOfScenesToUnload)
             {
                 if (_scenes.ContainsKey(x) && _loadedScenes.Contains(_scenes[x]))
                 {
-                    //unload the content??
+
+                    if (hardUnload)
+                    {
+                        _scenes[x].UnloadContent();
+                    }
+
                     _loadedScenes.Remove(_scenes[x]);
                 }
             }

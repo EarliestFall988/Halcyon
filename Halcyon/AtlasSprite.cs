@@ -76,6 +76,7 @@ namespace Lib
             }
 
             batch.Draw(Atlas, transform.position + transform.origin - cameraPositionOffset, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
+            
         }
     }
 

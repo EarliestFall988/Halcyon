@@ -19,10 +19,17 @@ namespace Lib
         /// the list of gameobjects
         /// </summary>
         public List<GameObject> GameObjectsToUpdate { get; private set; } = new List<GameObject>();
+
+        /// <summary>
+        /// the list of disabled objects
+        /// </summary>
         private List<GameObject> DisabledObjects { get; set; } = new List<GameObject>();
 
         private SpriteBatch _batch;
 
+        /// <summary>
+        /// the camera
+        /// </summary>
         public Camera Camera { get; private set; }
 
         /// <summary>
@@ -92,6 +99,18 @@ namespace Lib
             return gameobject;
         }
 
+        /// <summary>
+        /// destroy the game object
+        /// </summary>
+        /// <typeparam name="T">
+        /// the type of the game object
+        /// </typeparam>
+        /// <param name="gameobject">
+        /// the game object to destroy
+        /// </param>
+        /// <returns>
+        /// returns the destroyed game object
+        /// </returns>
         public T Destroy<T>(T gameobject) where T : GameObject
         {
             gameobject.Enabled = false;
@@ -100,6 +119,21 @@ namespace Lib
             return gameobject;
         }
 
+        /// <summary>
+        /// Clear the Game Object Pool
+        /// </summary>
+        public void Clear()
+        {
+            for (int i = 0; i < AllObjects.Count; i++)
+            {
+                AllObjects[i].Enabled = false;
+                AllObjects[i].Visible = false;
+            }
+
+            AllObjects.Clear();
+            DisabledObjects.Clear();
+            GameObjectsToUpdate.Clear();
+        }
 
         /// <summary>
         /// Remove the game objects that are disabled from the list of objects to be updated
