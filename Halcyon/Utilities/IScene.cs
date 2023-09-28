@@ -22,6 +22,8 @@ namespace Lib.Utilities
         GameObjectPool GameObjectPool { get; }
         Camera Camera { get; }
 
+        bool Loaded { get; set; }
+
         public int Id { get; }
         public string Name { get; }
 

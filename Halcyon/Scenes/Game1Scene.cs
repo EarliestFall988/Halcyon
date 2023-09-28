@@ -3,6 +3,7 @@ using Lib.PleasingTweening;
 using Lib.Utilities;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,11 +28,13 @@ namespace Lib.Scenes
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentManager Content { get; private set; }
 
+        List<SoundEffect> SFX = new List<SoundEffect>();
+
 
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
         public static readonly string p_PlatformerReduxBackground = "Kenney Platformer Redux/PNG/Backgrounds/blue_grass";
-        
+
 
         private Texture2D _genericObjectsAtlas;
         private Texture2D _platformerReduxAtlas;
@@ -54,6 +57,8 @@ namespace Lib.Scenes
         public static GameTime Time;
 
         public AtlasSprite CoinsCollectedSprite;
+
+        public bool Loaded { get; set; } = false;
 
         public Game1Scene(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, ContentManager contentManager)
         {
@@ -185,6 +190,13 @@ namespace Lib.Scenes
             character.name = "character";
             character.tag = new Tag("player");
             character.transform.scaleValue = 0.5f;
+            character.WalkingSoundEffects = new List<SoundEffect>()
+            {
+                SFX[2],
+                SFX[3],
+                SFX[4],
+                SFX[5],
+            };
 
             character.colliders.AddRange(new List<IGameObjectCollision>()
             {
@@ -394,6 +406,24 @@ namespace Lib.Scenes
             helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, SpriteBatch, Camera);
             helper.showGizmos = _drawVisualGizmos;
 
+            SFX.AddRange(new List<SoundEffect>()
+            {
+                Content.Load<SoundEffect>("Audio/651515__1bob__grab-item"),
+                Content.Load<SoundEffect>("Audio/blizzard-by-tim-kulig-from-filmmusic-io"),
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422990__dkiller2204__sfxrunground1"),
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422989__dkiller2204__sfxrunground2"),
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422994__dkiller2204__sfxrunground3"),
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422993__dkiller2204__sfxrunground4"),
+            });
+
+
+
+            var wind = SFX[1].CreateInstance();
+            wind.IsLooped = true;
+            wind.Play();
+            wind.Volume = 0.125f;
+
+
             _platformerReduxAtlas = Content.Load<Texture2D>(p_PlatformerRedux);
             _platformerReduxBackground = Content.Load<Texture2D>(p_PlatformerReduxBackground);
 
@@ -461,6 +491,7 @@ namespace Lib.Scenes
                         {
                             result.b.gameObject.SetActive(false);
                             PlayerProgression.IncrementCoinsCollected();
+                            SFX[0].Play();
                         }
                     }
                 }

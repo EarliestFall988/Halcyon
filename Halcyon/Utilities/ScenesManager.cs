@@ -72,6 +72,7 @@ namespace Lib.Utilities
                     _scenes[x].Initialize();
                     _scenes[x].LoadContent(contentManager);
                     _loadedScenes.Add(_scenes[x]);
+                    _scenes[x].Loaded = true;
                 }
             }
         }
@@ -99,6 +100,7 @@ namespace Lib.Utilities
                         _scenes[x].UnloadContent();
                     }
 
+                    _scenes[x].Loaded = false;
                     _loadedScenes.Remove(_scenes[x]);
                 }
             }

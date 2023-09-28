@@ -68,6 +68,7 @@ namespace Lib.Scenes
 
         public bool Visible => true;
 
+        public bool Loaded { get; set; } = false;
 
 
         public event EventHandler<EventArgs> EnabledChanged;

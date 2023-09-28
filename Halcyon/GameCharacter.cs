@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -28,6 +29,13 @@ namespace Lib
         private bool grounded = false;
         private bool running = false;
 
+        public SoundEffect RunningBreathe;
+
+        private float walkSFXTime = 0.25f;
+        private float walkSFXTimer = 0f;
+        public List<SoundEffect> WalkingSoundEffects;
+        public SoundEffect GroundedSoundEffect;
+
         public Texture2D Atlas;
 
         private CharacterState _currentState;
@@ -39,7 +47,7 @@ namespace Lib
         public GameCharacter(Vector2 origin)
         {
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
-            
+
         }
 
         private void HorizontalMovement(GameTime time)
@@ -75,6 +83,11 @@ namespace Lib
             if (!grounded) _currentState = States["jump"];
 
             VelocityX = MathHelper.Clamp(VelocityX, -1, 1);
+
+            if (MathF.Abs(VelocityX) > 0.25f)
+            {
+                WalkSFX(time);
+            }
         }
 
         private void VerticalMovment(GameTime time)
@@ -188,6 +201,18 @@ namespace Lib
                 return;
 
             _currentState.DrawObject(time, effect, Atlas, batch, this, cameraPositionOffset, rotationOffset);
+        }
+
+        private void WalkSFX(GameTime time)
+        {
+            walkSFXTimer += (float)time.ElapsedGameTime.TotalSeconds;
+
+            if (walkSFXTimer >= walkSFXTime)
+            {
+                var walk = WalkingSoundEffects[new Random().Next(0, WalkingSoundEffects.Count)].CreateInstance();
+                walk.Play();
+                walkSFXTimer = 0;
+            }
         }
     }
 

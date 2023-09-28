@@ -32,6 +32,204 @@
 /processorParam:TextureFormat=Compressed
 /build:arial.spritefont
 
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422963__dkiller2204__sfxfallingleaves.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422963__dkiller2204__sfxfallingleaves.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422964__dkiller2204__sfxenemygrunt3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422964__dkiller2204__sfxenemygrunt3.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422965__dkiller2204__sfxenemygrunt2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422965__dkiller2204__sfxenemygrunt2.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422966__dkiller2204__sfxenemygrunt1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422966__dkiller2204__sfxenemygrunt1.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422967__dkiller2204__sfxjumpliftoffgrass.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422967__dkiller2204__sfxjumpliftoffgrass.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422968__dkiller2204__sfxjumplandingground.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422968__dkiller2204__sfxjumplandingground.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422969__dkiller2204__sfxjumplandinggrass.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422969__dkiller2204__sfxjumplandinggrass.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422970__dkiller2204__sfxheavybreathingduringrun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422970__dkiller2204__sfxheavybreathingduringrun.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422971__dkiller2204__sfxkeypickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422971__dkiller2204__sfxkeypickup.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422972__dkiller2204__sfxjumpliftoffground.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422972__dkiller2204__sfxjumpliftoffground.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422974__dkiller2204__sfxwind.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422974__dkiller2204__sfxwind.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422975__dkiller2204__sfxwoodenobjectopen.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422975__dkiller2204__sfxwoodenobjectopen.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422976__dkiller2204__sfxwalkgrass3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422976__dkiller2204__sfxwalkgrass3.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422977__dkiller2204__sfxwalkgrass4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422977__dkiller2204__sfxwalkgrass4.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422978__dkiller2204__sfxwalkgrass1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422978__dkiller2204__sfxwalkgrass1.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422979__dkiller2204__sfxwalkgrass2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422979__dkiller2204__sfxwalkgrass2.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422980__dkiller2204__sfxwalkground3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422980__dkiller2204__sfxwalkground3.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422981__dkiller2204__sfxwalkground4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422981__dkiller2204__sfxwalkground4.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422982__dkiller2204__sfxwalkground1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422982__dkiller2204__sfxwalkground1.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422983__dkiller2204__sfxwalkground2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422983__dkiller2204__sfxwalkground2.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422985__dkiller2204__sfxrungrass2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422985__dkiller2204__sfxrungrass2.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422986__dkiller2204__sfxrungrass1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422986__dkiller2204__sfxrungrass1.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422987__dkiller2204__sfxpantingafterrun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422987__dkiller2204__sfxpantingafterrun.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422988__dkiller2204__sfxkeyrattle.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422988__dkiller2204__sfxkeyrattle.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422989__dkiller2204__sfxrunground2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422989__dkiller2204__sfxrunground2.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422990__dkiller2204__sfxrunground1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422990__dkiller2204__sfxrunground1.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422991__dkiller2204__sfxrungrass4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422991__dkiller2204__sfxrungrass4.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422992__dkiller2204__sfxrungrass3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422992__dkiller2204__sfxrungrass3.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422993__dkiller2204__sfxrunground4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422993__dkiller2204__sfxrunground4.wav
+
+#begin Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422994__dkiller2204__sfxrunground3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422994__dkiller2204__sfxrunground3.wav
+
+#begin Audio/651515__1bob__grab-item.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/651515__1bob__grab-item.wav
+
+#begin Audio/angelic-interlude-by-tim-kulig-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/angelic-interlude-by-tim-kulig-from-filmmusic-io.mp3
+
+#begin Audio/blizzard-by-tim-kulig-from-filmmusic-io.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/blizzard-by-tim-kulig-from-filmmusic-io.wav
+
 #begin Halcyon Debug Prmtvs/128_debug_box.png
 /importer:TextureImporter
 /processor:TextureProcessor

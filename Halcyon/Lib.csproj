@@ -24,7 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Kenny Generic Objects\" />
-    <Folder Include="Content\Audio\" />
     <Folder Include="CustomCode\" />
   </ItemGroup>
   <ItemGroup>

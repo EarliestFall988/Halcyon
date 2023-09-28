@@ -11,6 +11,7 @@ using Lib.PleasingTweening;
 using Lib.Utilities;
 using Lib.Collision;
 using Lib.Scenes;
+using Microsoft.Xna.Framework.Media;
 
 namespace Lib
 {
@@ -26,6 +27,8 @@ namespace Lib
 
         public static GameTime Time;
         public static ScenesManager scenesManager;
+
+        public Song song;
 
         public GameManager()
         {
@@ -57,6 +60,12 @@ namespace Lib
             scenesManager.LoadScenesByName(new List<string>() { "Main Menu" }, Content);
 
 
+            song = Content.Load<Song>("Audio/angelic-interlude-by-tim-kulig-from-filmmusic-io");
+            MediaPlayer.Play(song);
+            //  Uncomment the following line will also loop the song
+            MediaPlayer.IsRepeating = true;
+
+
             base.Initialize();
         }
 
@@ -66,9 +75,15 @@ namespace Lib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-    
-
             scenesManager.UpdateLoadedScenes(gameTime);
+
+            foreach(var x in scenesManager.Scenes)
+            {
+                if(x.Name != "Main Menu" && x.Loaded)
+                {
+                    MediaPlayer.Volume = 0.1f;
+                }
+            }
 
             base.Update(gameTime);
         }
