@@ -30,6 +30,7 @@ namespace Lib
         private bool running = false;
 
         public SoundEffect RunningBreathe;
+        private SoundEffectInstance runningSFXInstance;
 
         private float walkSFXTime = 0.25f;
         private float walkSFXTimer = 0f;
@@ -84,7 +85,7 @@ namespace Lib
 
             VelocityX = MathHelper.Clamp(VelocityX, -1, 1);
 
-            if (MathF.Abs(VelocityX) > 0.25f)
+            if (MathF.Abs(VelocityX) > 0.25f && grounded)
             {
                 WalkSFX(time);
             }
@@ -103,6 +104,10 @@ namespace Lib
             if (transform.position.Y >= 163 && VelocityY > 0)
             {
                 VelocityY = 0;
+
+                if (!grounded)
+                    GroundedSoundEffect.Play();
+
                 grounded = true;
             }
 
@@ -134,10 +139,25 @@ namespace Lib
             {
                 finalHorizontalMovementSpeed = (VelocityX * runSpeed);
                 transform.rotation = MathHelper.ToRadians(10) * VelocityX;
+
+                if (!running)
+                {
+                    runningSFXInstance = RunningBreathe.CreateInstance();
+                    runningSFXInstance.IsLooped = true;
+                    runningSFXInstance.Play();
+                }
+
                 running = true;
             }
             else
             {
+                if (runningSFXInstance != null)
+                {
+                    runningSFXInstance.Stop();
+                    runningSFXInstance.Dispose();
+                    runningSFXInstance = null;
+                }
+
                 running = false;
             }
 
@@ -161,6 +181,7 @@ namespace Lib
             if (!grounded)
             {
                 transform.rotation = MathHelper.ToRadians(15 * VelocityX);
+
             }
 
             if (Math.Abs(VelocityX) < 0.125f && MathF.Abs(VelocityY) < 0.125f)

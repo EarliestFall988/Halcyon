@@ -198,6 +198,9 @@ namespace Lib.Scenes
                 SFX[5],
             };
 
+            character.GroundedSoundEffect = SFX[6];
+            character.RunningBreathe = SFX[7];
+
             character.colliders.AddRange(new List<IGameObjectCollision>()
             {
                 new BoundingCircle(character.transform.position, character.transform.scaleValue * 128 / 2, character),
@@ -408,12 +411,14 @@ namespace Lib.Scenes
 
             SFX.AddRange(new List<SoundEffect>()
             {
-                Content.Load<SoundEffect>("Audio/651515__1bob__grab-item"),
-                Content.Load<SoundEffect>("Audio/blizzard-by-tim-kulig-from-filmmusic-io"),
-                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422990__dkiller2204__sfxrunground1"),
-                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422989__dkiller2204__sfxrunground2"),
-                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422994__dkiller2204__sfxrunground3"),
-                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422993__dkiller2204__sfxrunground4"),
+                Content.Load<SoundEffect>("Audio/651515__1bob__grab-item"), //grab coin
+                Content.Load<SoundEffect>("Audio/blizzard-by-tim-kulig-from-filmmusic-io"), //wind bckgnd
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422990__dkiller2204__sfxrunground1"), //locomotion
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422989__dkiller2204__sfxrunground2"), //locomotion
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422994__dkiller2204__sfxrunground3"), //locomotion
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422993__dkiller2204__sfxrunground4"), //locomotion
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422968__dkiller2204__sfxjumplandingground"), //landing
+                Content.Load<SoundEffect>("Audio/23937__dkiller2204__foundation-sounds-for-in-search-of-the-fallen-star/422987__dkiller2204__sfxpantingafterrun"), //running breathe hard
             });
 
 
