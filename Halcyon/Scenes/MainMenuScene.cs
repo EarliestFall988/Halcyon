@@ -6,6 +6,7 @@ using Lib.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,10 @@ namespace Lib.Scenes
         private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
 
+
+        private Vector2 mousePosition = Vector2.Zero;
+        private float mouseParalaxMultiplier = 0.125f / 2f;
+
         public int Id => 0;
 
         public string Name => "Main Menu";
@@ -90,6 +95,7 @@ namespace Lib.Scenes
         {
             GameObjectPool = new GameObjectPool(SpriteBatch, Camera);
 
+            Mouse.SetPosition(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
             Camera.HandheldCameraShakeEnabled = true;
             Camera.HandheldCameraShakeAmount = 2;
@@ -107,7 +113,7 @@ namespace Lib.Scenes
             playButton.transform.scaleValue = 5;
             playButton.ButtonClickAction = () =>
             {
-                GameManager.scenesManager.UnloadScenesByName(new List<string>() {"Main Menu"}, true);
+                GameManager.scenesManager.UnloadScenesByName(new List<string>() { "Main Menu" }, true);
                 GameManager.scenesManager.LoadScenesByName(new List<string>() { "First Scene" }, Content);
             };
 
@@ -158,7 +164,8 @@ namespace Lib.Scenes
 
         public void Draw(GameTime gameTime)
         {
-            SpriteBatch.Begin();
+
+            SpriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(mousePosition.X, mousePosition.Y, 0)));
 
             for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)
             {
@@ -173,6 +180,9 @@ namespace Lib.Scenes
 
         public void Update(GameTime gameTime)
         {
+
+            mousePosition = Mouse.GetState().Position.ToVector2() * -mouseParalaxMultiplier;
+
             Tweening.Update(gameTime);
 
             for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)

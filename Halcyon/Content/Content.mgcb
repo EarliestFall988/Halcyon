@@ -326,3 +326,15 @@
 /processorParam:TextureFormat=Color
 /build:Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored.png
 
+#begin sparkle.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sparkle.jpg
+
