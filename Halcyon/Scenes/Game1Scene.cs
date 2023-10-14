@@ -1,4 +1,5 @@
 ﻿using Lib.Collision;
+using Lib.Particle_System;
 using Lib.PleasingTweening;
 using Lib.Utilities;
 
@@ -47,7 +48,7 @@ namespace Lib.Scenes
         private Texture2D _debugbox;
         private Texture2D _debugcircle;
         private Texture2D _debugDot;
-        private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
+        private bool _drawVisualGizmos = true; // set to true to see the collision gizmos
 
         public GameObjectPool GameObjectPool { get; private set; }
         public Camera Camera { get; private set; } = new();
@@ -114,6 +115,7 @@ namespace Lib.Scenes
             atlasSpriteTest1.Atlas = _genericObjectsAtlas;
             atlasSpriteTest1.SpriteLocation = new Rectangle(688, 393, 52, 68);
             atlasSpriteTest1.transform.SetParent(atlasSpriteTest.transform);
+
 
             TweenTimeline timeline = Tweening.NewTimeline();
             var positionProperty = timeline.AddVector2(GameObjectPool.GameObjectsToUpdate[0].transform, "position");
@@ -303,6 +305,12 @@ namespace Lib.Scenes
             coin.tag = new Tag("coin");
             coin.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin) });
 
+            var coinSparkleEmitter = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(310, 450), 0, Vector2.One, true);
+            //coinSparkleEmitter.Position = coin.transform.position;
+            coinSparkleEmitter.name = "coin sparkle emitter";
+            coinSparkleEmitter.transform.SetParent(coin.transform);
+
+
             TweenTimeline timeline = Tweening.NewTimeline();
             var positionProperty = timeline.AddVector2(coin.transform, nameof(coin.transform.position));
             var rotationProperty = timeline.AddFloat(coin.transform, nameof(coin.transform.rotation));
@@ -323,6 +331,11 @@ namespace Lib.Scenes
             coin1.transform.scaleValue = 0.5f;
             coin1.tag = new Tag("coin");
             coin1.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin1.transform.position, coin1.transform.scaleValue * 128 / 2, coin1) });
+
+            var coinSparkleEmitter1 = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(700, 350), 0, Vector2.One, true);
+            //coinSparkleEmitter.Position = coin.transform.position;
+            coinSparkleEmitter1.name = "coin sparkle emitter 1";
+            coinSparkleEmitter1.transform.SetParent(coin.transform);
 
             TweenTimeline timeline1 = Tweening.NewTimeline();
             var positionProperty1 = timeline1.AddVector2(coin1.transform, nameof(coin1.transform.position));
@@ -469,6 +482,12 @@ namespace Lib.Scenes
                 GameObjectPool.GameObjectsToUpdate[i].Update(gameTime);
             }
 
+            for (int i = 0; i < GameObjectPool.GameObjectsToDrawIndependently.Count; i++)
+            {
+                if (GameObjectPool.GameObjectsToDrawIndependently[i].Visible && GameObjectPool.GameObjectsToDrawIndependently[i].Enabled)
+                    GameObjectPool.GameObjectsToDrawIndependently[i].Update(gameTime);
+            }
+
             var gameObjects = GameObjectPool.AllObjects.FindAll(x => x.colliders.Count > 0 && x.Enabled);
             List<IGameObjectCollision> cols = new List<IGameObjectCollision>();
 
@@ -495,6 +514,13 @@ namespace Lib.Scenes
                         if (result.a.gameObject.tag.name == "player" && result.b.gameObject.tag.name == "coin")
                         {
                             result.b.gameObject.SetActive(false);
+
+                            Debug.WriteLine("destroyed obj");
+                            foreach (var x in result.b.gameObject.transform.children)
+                            {
+                                Debug.WriteLine(x.gameObject.name);
+                            }
+
                             PlayerProgression.IncrementCoinsCollected();
                             SFX[0].Play();
                         }
@@ -522,6 +548,13 @@ namespace Lib.Scenes
             DebugHelper.Main.Draw(gameTime);
 
             SpriteBatch.End();
+
+            ///items that have their own sprite batch
+            for (int i = 0; i < GameObjectPool.GameObjectsToDrawIndependently.Count; i++)
+            {
+                if (GameObjectPool.GameObjectsToDrawIndependently[i].Visible && GameObjectPool.GameObjectsToDrawIndependently[i].Enabled)
+                    GameObjectPool.GameObjectsToDrawIndependently[i].Draw(gameTime);
+            }
 
         }
     }

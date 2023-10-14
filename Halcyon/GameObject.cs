@@ -81,6 +81,11 @@ namespace Lib
                         Start();
                     }
 
+                    foreach (var x in transform.children)
+                    {
+                        x.gameObject.SetActive(value);
+                    }
+
                 }
             }
         }
@@ -145,7 +150,7 @@ namespace Lib
             if (!Enabled)
                 return;
 
-            for(int i = 0; i < colliders.Count; i++)
+            for (int i = 0; i < colliders.Count; i++)
             {
                 colliders[i].Update(transform);
             }

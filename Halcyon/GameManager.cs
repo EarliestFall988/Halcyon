@@ -28,6 +28,8 @@ namespace Lib
         public static GameTime Time;
         public static ScenesManager scenesManager;
 
+        public static Game main;
+
         public Song song;
 
         public GameManager()
@@ -37,6 +39,10 @@ namespace Lib
             RootContent = Content;
             IsMouseVisible = true;
 
+
+
+
+            main = this;
         }
 
         protected override void Initialize()
@@ -77,9 +83,9 @@ namespace Lib
 
             scenesManager.UpdateLoadedScenes(gameTime);
 
-            foreach(var x in scenesManager.Scenes)
+            foreach (var x in scenesManager.Scenes)
             {
-                if(x.Name != "Main Menu" && x.Loaded)
+                if (x.Name != "Main Menu" && x.Loaded)
                 {
                     MediaPlayer.Volume = 0.1f;
                 }

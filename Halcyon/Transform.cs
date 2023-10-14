@@ -156,7 +156,7 @@ namespace Lib
         /// <param name="vector">the position</param>
         public void Translate(Vector2 vector)
         {
-                
+
 
             position = position + vector;
         }
@@ -178,11 +178,12 @@ namespace Lib
         {
             if (this.parent != null)
             {
-                this.parent.children.Remove(this);
+                RemoveParent();
             }
 
             this.parent = parent;
             parent.children.Add(this);
+            Debug.WriteLine(parent.children[0].gameObject.name + " " + parent.gameObject.name);
         }
 
 

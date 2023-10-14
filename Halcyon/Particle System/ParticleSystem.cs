@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 
 namespace Lib.Particle
 {
@@ -95,13 +96,18 @@ namespace Lib.Particle
         /// </summary>
         public int FreeParticleCount => freeParticles.Count;
 
+        /// <summary>
+        /// the position of the camera
+        /// </summary>
+        public Vector2 CameraPosition { get; set; }
+
         #endregion
 
         /// <summary>
         /// Constructs a new instance of a particle system
         /// </summary>
         /// <param name="game"></param>
-        public ParticleSystem(Game game, int maxParticles) : base(game) 
+        public ParticleSystem(Game game, int maxParticles) : base(game)
         {
             // Create our particles
             particles = new Particle[maxParticles];
@@ -161,6 +167,11 @@ namespace Lib.Particle
 
         #region override methods 
 
+        public void Load()
+        {
+            LoadContent();
+        }
+
         /// <summary>
         /// Override the base class LoadContent to load the texture. once it's
         /// loaded, calculate the origin.
@@ -204,7 +215,7 @@ namespace Lib.Particle
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // go through all of the particles...
-            for(int i = 0; i < particles.Length; i++)
+            for (int i = 0; i < particles.Length; i++)
             {
 
                 if (particles[i].Active)
@@ -229,16 +240,25 @@ namespace Lib.Particle
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+
+            if (spriteBatch == null)
+            {
+                string message = "Particle system doesn't have a sprite batch.";
+                Debug.WriteLine(message);
+                return;
+                //throw new InvalidOperationException(message);
+            };
+
             // tell sprite batch to begin, using the spriteBlendMode specified in
             // initializeConstants
-            spriteBatch.Begin(blendState: blendState);
+            spriteBatch.Begin(blendState: blendState, transformMatrix: Matrix.CreateTranslation(new Vector3(-CameraPosition.X, -CameraPosition.Y, 0)));
 
             foreach (Particle p in particles)
             {
                 // skip inactive particles
                 if (!p.Active)
                     continue;
-                
+
                 spriteBatch.Draw(texture, p.Position, null, p.Color,
                     p.Rotation, origin, p.Scale, SpriteEffects.None, 0.0f);
             }

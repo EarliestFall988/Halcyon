@@ -25,6 +25,11 @@ namespace Lib
         /// </summary>
         private List<GameObject> DisabledObjects { get; set; } = new List<GameObject>();
 
+        /// <summary>
+        /// the list of game objects to call draw outside the existing sprite batch
+        /// </summary>
+        public List<GameObject> GameObjectsToDrawIndependently { get; private set; } = new List<GameObject>();
+
         private SpriteBatch _batch;
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace Lib
                 var objects = new List<GameObject>();
                 objects.AddRange(GameObjectsToUpdate);
                 objects.AddRange(DisabledObjects);
+                objects.AddRange(GameObjectsToDrawIndependently);
                 return objects;
             }
         }
@@ -84,17 +90,27 @@ namespace Lib
         /// <param name="rotation">the rotation of the gameobject</param>
         /// <param name="batch">the sprite batch</param>
         /// <returns>returns the object</returns>
-        public T SpawnObject<T>(T gameobject, Vector2 position, float rotation, Vector2 scale) where T : GameObject
+        public T SpawnObject<T>(T gameobject, Vector2 position, float rotation, Vector2 scale, bool drawIndependently = false) where T : GameObject
         {
             var transform = new Transform(position, scale, rotation, gameobject);
             gameobject.transform = transform;
             gameobject.Enabled = true;
             gameobject.Visible = true;
-            gameobject.batch = _batch;
+
+            if (!drawIndependently)
+                gameobject.batch = _batch;
 
             gameobject.EnabledChanged += ObjectEnabledChanged;
 
-            GameObjectsToUpdate.Add(gameobject);
+
+            if (drawIndependently)
+            {
+                GameObjectsToDrawIndependently.Add(gameobject);
+            }
+            else
+            {
+                GameObjectsToUpdate.Add(gameobject);
+            }
 
             return gameobject;
         }
@@ -137,7 +153,7 @@ namespace Lib
             DisabledObjects.Clear();
             GameObjectsToUpdate.Clear();
 
-            if(removeStatic)
+            if (removeStatic)
             {
                 Main = null;
             }
