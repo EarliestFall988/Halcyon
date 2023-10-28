@@ -48,7 +48,7 @@ namespace Lib.Scenes
         private Texture2D _debugbox;
         private Texture2D _debugcircle;
         private Texture2D _debugDot;
-        private bool _drawVisualGizmos = true; // set to true to see the collision gizmos
+        private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
         public GameObjectPool GameObjectPool { get; private set; }
         public Camera Camera { get; private set; } = new();
@@ -305,10 +305,7 @@ namespace Lib.Scenes
             coin.tag = new Tag("coin");
             coin.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin) });
 
-            var coinSparkleEmitter = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(310, 450), 0, Vector2.One, true);
-            //coinSparkleEmitter.Position = coin.transform.position;
-            coinSparkleEmitter.name = "coin sparkle emitter";
-            coinSparkleEmitter.transform.SetParent(coin.transform);
+
 
 
             TweenTimeline timeline = Tweening.NewTimeline();
@@ -332,9 +329,19 @@ namespace Lib.Scenes
             coin1.tag = new Tag("coin");
             coin1.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin1.transform.position, coin1.transform.scaleValue * 128 / 2, coin1) });
 
+
+            Vector2 coinSparkleOffset = new Vector2(52, 52);
+
+            var coinSparkleEmitter = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(310, 450), 0, Vector2.One, true);
+            //coinSparkleEmitter.Position = coin.transform.position;
+            coinSparkleEmitter.name = "coin sparkle emitter";
+            coinSparkleEmitter.transform.position = coin1.transform.position + coinSparkleOffset;
+            coinSparkleEmitter.transform.SetParent(coin1.transform);
+
             var coinSparkleEmitter1 = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(700, 350), 0, Vector2.One, true);
             //coinSparkleEmitter.Position = coin.transform.position;
             coinSparkleEmitter1.name = "coin sparkle emitter 1";
+            coinSparkleEmitter1.transform.position = coin.transform.position + coinSparkleOffset;
             coinSparkleEmitter1.transform.SetParent(coin.transform);
 
             TweenTimeline timeline1 = Tweening.NewTimeline();

@@ -25,6 +25,7 @@
   <ItemGroup>
     <Folder Include="Content\Kenny Generic Objects\" />
     <Folder Include="CustomCode\" />
+    <Folder Include="Serialization\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PleasingTweening\Pleasing.csproj" />
