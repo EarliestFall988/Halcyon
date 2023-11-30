@@ -3,13 +3,14 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/platform:Windows
 /config:
 /profile:Reach
 /compress:False
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\TilemapPipeline\bin\Release\net6.0\TilemapPipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -314,6 +315,18 @@
 /processorParam:TextureFormat=Color
 /build:Kenney Platformer Redux/Spritesheets/spritesheet_complete.png
 
+#begin Kenney Platformer Redux/Spritesheets/spritesheet_ground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Kenney Platformer Redux/Spritesheets/spritesheet_ground.png
+
 #begin Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -337,4 +350,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:sparkle.png
+
+#begin spritesheet_ground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesheet_ground.png
+
+#begin tile map.tmx
+/importer:TiledImporter
+/processor:OOTilemapProcessor
+/build:tile map.tmx
 

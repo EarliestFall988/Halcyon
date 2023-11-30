@@ -12,7 +12,7 @@ namespace TilemapPipeline
     /// Note that tileset information is instead embedded directly in the tiles
     /// in this approach.
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.OOTilemap, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.OOTilemap, Lib")]
     public class OOTilemapContent
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace TilemapPipeline
     /// <summary>
     /// A representation of tile layers for the OOTilemapContent
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.OOTilemapLayer, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.OOTilemapLayer, Lib")]
     public class OOTilemapLayerContent
     {
         /// <summary>
@@ -48,7 +48,7 @@ namespace TilemapPipeline
     /// Note that it contains no information - the base tile is
     /// a placeholder for a "no tile here".
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.OOTilemapTile, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.OOTilemapTile, Lib")]
     public class OOTilemapTileContent
     {
 
@@ -57,7 +57,7 @@ namespace TilemapPipeline
     /// <summary>
     /// A representation for a textured tile in the OOTilemapContent 
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.OOTexturedTile, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.OOTexturedTile, Lib")]
     public class OOTexturedTileContent : OOTilemapTileContent
     {
         /// <summary>

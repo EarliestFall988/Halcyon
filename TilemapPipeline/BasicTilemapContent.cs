@@ -14,7 +14,7 @@ namespace TilemapPipeline
     /// A game-specific implementation of a tilemap. This is a very limited
     /// representation, which only allows for one layer and one tileset.
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.BasicTilemap, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.BasicTilemap, Lib")]
     public class BasicTilemapContent
     {
         /// <summary>Map dimensions</summary>

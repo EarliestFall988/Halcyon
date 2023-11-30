@@ -1,4 +1,6 @@
-﻿using Lib.Collision;
+﻿using ExampleGame;
+
+using Lib.Collision;
 using Lib.Particle_System;
 using Lib.PleasingTweening;
 using Lib.Utilities;
@@ -30,6 +32,8 @@ namespace Lib.Scenes
         public ContentManager Content { get; private set; }
 
         List<SoundEffect> SFX = new List<SoundEffect>();
+
+        OOTilemap _ooMap = new OOTilemap();
 
 
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
@@ -426,6 +430,8 @@ namespace Lib.Scenes
             _debugcircle = Content.Load<Texture2D>(p_DebugCircle);
             _debugDot = Content.Load<Texture2D>(p_4px_dot);
 
+            _ooMap = Content.Load<OOTilemap>("tile map");
+
             helper = new DebugHelper(_debugbox, _debugcircle, _debugDot, SpriteBatch, Camera);
             helper.showGizmos = _drawVisualGizmos;
 
@@ -480,6 +486,8 @@ namespace Lib.Scenes
 
 
             Tweening.Update(gameTime);
+
+            _ooMap.Update(gameTime);
 
 
             // TODO: Add your update logic here
@@ -547,10 +555,12 @@ namespace Lib.Scenes
 
             SpriteBatch.Begin();
 
-            for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)
-            {
-                GameObjectPool.GameObjectsToUpdate[i].Draw(gameTime);
-            }
+            _ooMap.Draw(gameTime, SpriteBatch);
+
+            //for (int i = 0; i < GameObjectPool.GameObjectsToUpdate.Count; i++)
+            //{
+            //    GameObjectPool.GameObjectsToUpdate[i].Draw(gameTime);
+            //}
 
             DebugHelper.Main.Draw(gameTime);
 

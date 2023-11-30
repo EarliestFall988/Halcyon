@@ -7,7 +7,7 @@ namespace TilemapPipeline
     /// <summary>
     /// A class representing a Hero's information
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.Hero, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.Hero, Lib")]
     public class HeroContent
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace TilemapPipeline
     /// <summary>
     /// A class representing a Tilemap with a hero in it
     /// </summary>
-    [ContentSerializerRuntimeType("ExampleGame.HeroTilemap, ExampleGame")]
+    [ContentSerializerRuntimeType("Lib.HeroTilemap, Lib")]
     public class HeroTilemapContent : OOTilemapContent
     {
         /// <summary>

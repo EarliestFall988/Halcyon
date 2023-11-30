@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MonoGame.Framework.Utilities.Deflate;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection.Emit;
+using System.Diagnostics;
 
 namespace TilemapPipeline
 {
@@ -40,14 +41,14 @@ namespace TilemapPipeline
             {
                 var name = reader.Name;
 
-                switch(reader.NodeType)
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.DocumentType:
                         if (name != "map")
                             throw new Exception("Invalid Map Format");
                         break;
                     case XmlNodeType.Element:
-                        switch(name)
+                        switch (name)
                         {
                             case "map":
                                 {
@@ -91,11 +92,11 @@ namespace TilemapPipeline
                         }
                         break;
                     case XmlNodeType.EndElement:
-                            break;
+                        break;
                     case XmlNodeType.Whitespace:
-                            break;
+                        break;
                     case XmlNodeType.XmlDeclaration:
-                            break;
+                        break;
                     default:
                         context.Logger.LogMessage($"Unhandled XML Node {name}");
                         break;
@@ -123,10 +124,11 @@ namespace TilemapPipeline
 
             // Load required attributes
             tileset.Name = reader.GetAttribute("name");
+
             tileset.FirstTileId = int.Parse(reader.GetAttribute("firstgid"));
             tileset.TileWidth = int.Parse(reader.GetAttribute("tilewidth"));
             tileset.TileHeight = int.Parse(reader.GetAttribute("tileheight"));
-            
+
             // Load optional attributes
             int.TryParse(reader.GetAttribute("margin"), out tileset.Margin);
             int.TryParse(reader.GetAttribute("spacing"), out tileset.Spacing);
@@ -134,14 +136,14 @@ namespace TilemapPipeline
             int currentTileId = -1;
 
             // Process the nested nodes
-            while(reader.Read())
+            while (reader.Read())
             {
                 var name = reader.Name;
 
-                switch(reader.NodeType)
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
-                        switch(name)
+                        switch (name)
                         {
                             case "image":
                                 tileset.ImageFilename = reader.GetAttribute("source");
@@ -183,18 +185,18 @@ namespace TilemapPipeline
             layer.TileIndices = new int[layer.Width * layer.Height];
             layer.SpriteEffects = new SpriteEffects[layer.Width * layer.Height];
 
-            while(reader.Read())
+            while (reader.Read())
             {
                 var name = reader.Name;
 
-                switch(reader.NodeType)
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
-                        switch(name)
+                        switch (name)
                         {
                             case "data":
                                 {
-                                    if(reader.GetAttribute("encoding") != null)
+                                    if (reader.GetAttribute("encoding") != null)
                                     {
                                         var encoding = reader.GetAttribute("encoding");
                                         var compressor = reader.GetAttribute("compression");
@@ -296,10 +298,10 @@ namespace TilemapPipeline
             {
                 var name = reader.Name;
 
-                switch(reader.NodeType)
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
-                        switch(name)
+                        switch (name)
                         {
                             case "object":
                                 {
@@ -371,13 +373,13 @@ namespace TilemapPipeline
             {
                 var name = reader.Name;
 
-                if(name == "property")
+                if (name == "property")
                 {
                     string key = reader.GetAttribute("name");
                     string value = reader.GetAttribute("value");
                     properties.Add(key, value);
                 }
-            }          
+            }
 
 
             return properties;
