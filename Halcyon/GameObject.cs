@@ -1,11 +1,16 @@
 ﻿using Lib.Collision;
+using Lib.Utilities;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using nkast.Aether.Physics2D.Dynamics;
+using nkast.Aether.Physics2D.Dynamics.Contacts;
+
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,17 +68,25 @@ namespace Lib
         /// </summary>
         public bool Enabled
         {
-            get => _enabledStore;
+            get => m_enabled;
             set
             {
-                if (value != _enabledStore)
+                if (value != m_enabled)
                 {
-                    _enabledStore = value; EnabledChanged?.Invoke(this, new EventArgs());
+                    m_enabled = value; EnabledChanged?.Invoke(this, new EventArgs());
 
                     if (value)
                         OnEnable();
                     else
                         OnDisable();
+
+                    foreach (var x in components)
+                    {
+                        if (value)
+                            x.OnEnable();
+                        else
+                            x.OnDisable();
+                    }
 
                     if (value && firstTimeEnabled)
                     {
@@ -86,10 +99,12 @@ namespace Lib
                         x.gameObject.SetActive(value);
                     }
 
+
+
                 }
             }
         }
-        private bool _enabledStore = false;
+        private bool m_enabled = false;
         private bool firstTimeEnabled = false;
 
         [Obsolete("not being used at this time")]
@@ -106,16 +121,16 @@ namespace Lib
         /// </summary>
         public bool Visible
         {
-            get => _visibleStore;
+            get => m_visible;
             set
             {
-                if (value != _visibleStore)
+                if (value != m_visible)
                 {
-                    _visibleStore = value; VisibleChanged?.Invoke(this, new EventArgs());
+                    m_visible = value; VisibleChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
-        private bool _visibleStore = false;
+        private bool m_visible = false;
 
         #endregion
 
@@ -140,6 +155,7 @@ namespace Lib
 
         #region interface implementations 
 
+
         /// <summary>
         /// Update the game object
         /// </summary>
@@ -149,6 +165,11 @@ namespace Lib
 
             if (!Enabled)
                 return;
+
+            foreach (var x in components)
+            {
+                x.Update(gameTime);
+            }
 
             for (int i = 0; i < colliders.Count; i++)
             {
@@ -171,6 +192,11 @@ namespace Lib
         {
             if (!Visible || !Enabled)
                 return;
+
+            foreach (var x in components)
+            {
+                x.Draw();
+            }
 
             DrawObject(gameTime, camera.position, camera.rotation);
         }
@@ -198,6 +224,7 @@ namespace Lib
         protected virtual void OnEnable()
         {
             //do nothing (can extend later)
+
         }
 
         /// <summary>
@@ -229,11 +256,11 @@ namespace Lib
         /// <param name="tag"></param>
         /// <param name="objects"></param>
         /// <returns></returns>
-        public static List<GameObject> FindObjectsWithTag(Tag tag, List<GameObject> objects)
+        public static List<GameObject> FindObjectsWithTag(Tag tag)
         {
             List<GameObject> result = new List<GameObject>();
 
-            foreach (GameObject obj in objects)
+            foreach (GameObject obj in GameObjectPool.Main.AllObjects)
             {
                 if (obj.tag == tag)
                     result.Add(obj);
@@ -248,11 +275,12 @@ namespace Lib
         /// <param name="name"></param>
         /// <param name="objects"></param>
         /// <returns></returns>
-        public static List<GameObject> FindGameObjectsWithName(string name, List<GameObject> objects)
+        public static List<GameObject> FindGameObjectsWithName(string name)
         {
+
             List<GameObject> result = new List<GameObject>();
 
-            foreach (GameObject obj in objects)
+            foreach (GameObject obj in GameObjectPool.Main.AllObjects)
             {
                 if (obj.name == name)
                     result.Add(obj);
@@ -261,6 +289,82 @@ namespace Lib
             return result;
         }
 
+
+        /// <summary>
+        /// Find the list of gameobjects with a specific game object component
+        /// </summary>
+        /// <typeparam name="T">the type of gameobject component</typeparam>
+        /// <returns></returns>
+        public static List<GameObject> FindGameObjectsWithComponent<T>() where T : class, IGameObjectComponent
+        {
+            List<GameObject> result = new List<GameObject>();
+
+            foreach (var obj in GameObjectPool.Main.AllObjects)
+            {
+                if (obj.GetComponent<T>() != null)
+                    result.Add(obj);
+            }
+
+            return result;
+        }
+
         #endregion
+
+
+
+
+        #region Component Architecture
+
+        /// <summary>
+        /// the hashset of components
+        /// </summary>
+        private HashSet<IGameObjectComponent> components { get; set; } = new HashSet<IGameObjectComponent>();
+
+        /// <summary>
+        /// Get the component of the game object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponent<T>() where T : class, IGameObjectComponent
+        {
+            foreach (var x in components)
+            {
+                if (x is T)
+                {
+                    return (T)x;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Add the component to the game object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void AddComponent<T>() where T : class, IGameObjectComponent
+        {
+            if (GetComponent<T>() != null)
+                return;
+
+            var component = (IGameObjectComponent)Activator.CreateInstance(typeof(T), this);
+            components.Add(component);
+        }
+
+        public void RemoveComponent<T>() where T : class, IGameObjectComponent
+        {
+            if (GetComponent<T>() == null)
+                return;
+
+            components.Remove(GetComponent<T>());
+        }
+
+        /// <summary>
+        /// Get the components of the game object
+        /// </summary>
+        public IGameObjectComponent[] GetComponents => components.ToArray();
+
+        #endregion
+
     }
 }

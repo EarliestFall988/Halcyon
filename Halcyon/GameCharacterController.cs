@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Lib
 {
-    public class GameCharacter : GameObject
+    public class GameCharacterController : GameObject
     {
         private float speedUpTime = 4f;
         private float breakSpeedTime = 4f;
@@ -45,7 +45,7 @@ namespace Lib
         public Dictionary<string, CharacterState> States { get; set; } = new Dictionary<string, CharacterState>();
 
 
-        public GameCharacter(Vector2 origin)
+        public GameCharacterController(Vector2 origin)
         {
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
 
@@ -234,6 +234,11 @@ namespace Lib
                 walk.Play();
                 walkSFXTimer = 0;
             }
+        }
+
+        public static void SetupCharacter()
+        {
+
         }
     }
 

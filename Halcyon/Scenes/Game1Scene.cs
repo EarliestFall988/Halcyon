@@ -1,13 +1,18 @@
 ﻿using Lib.Collision;
+using Lib.GameObjectComponents;
 using Lib.Particle_System;
 using Lib.PleasingTweening;
 using Lib.Utilities;
+using Lib.WorldItems;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using nkast.Aether.Physics2D.Collision.Shapes;
+using nkast.Aether.Physics2D.Dynamics;
 
 using Pleasing;
 
@@ -21,6 +26,9 @@ using System.Threading.Tasks;
 
 namespace Lib.Scenes
 {
+    /// <summary>
+    /// The Game Scene
+    /// </summary>
     public class Game1Scene : IScene
     {
 
@@ -30,7 +38,6 @@ namespace Lib.Scenes
         public ContentManager Content { get; private set; }
 
         List<SoundEffect> SFX = new List<SoundEffect>();
-
 
         public static readonly string p_KenneyGenericObjects = "Kenny Generic Objects/Spritesheet/genericItems_spritesheet_colored";
         public static readonly string p_PlatformerRedux = "Kenney Platformer Redux/Spritesheets/spritesheet_complete";
@@ -48,7 +55,7 @@ namespace Lib.Scenes
         private Texture2D _debugbox;
         private Texture2D _debugcircle;
         private Texture2D _debugDot;
-        private bool _drawVisualGizmos = true; // set to true to see the collision gizmos
+        private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
         public GameObjectPool GameObjectPool { get; private set; }
         public Camera Camera { get; private set; } = new();
@@ -58,6 +65,8 @@ namespace Lib.Scenes
         public static GameTime Time;
 
         public AtlasSprite CoinsCollectedSprite;
+
+        public World World { get; set; }
 
         public bool Loaded { get; set; } = false;
 
@@ -95,6 +104,8 @@ namespace Lib.Scenes
             Camera.HandheldCameraShakeAmount = 2;
             Camera.HandheldCameraShakeFrequency = 3;
             Camera.CharacterCameraOffset = new Vector2(-200, -200);
+
+            World = new();
         }
 
         #region content initialization
@@ -132,87 +143,9 @@ namespace Lib.Scenes
             timeline.Loop = true;
         }
 
-
-        private GameObject SetupCharacter()
-        {
-            GameCharacter character = new GameCharacter(new Vector2(128, 256) / 2)
-            {
-                Atlas = _platformerReduxAtlas,
-                States = new Dictionary<string, CharacterState>()
-                {
-                    {
-                        "idle", new CharacterState()
-                        {
-                            frames = new List<Rectangle>()
-                            {
-                                new Rectangle(650,516,128,256),
-                            }
-                        }
-                    },
-                    {
-                        "duck", new CharacterState()
-                        {
-                            frames = new List<Rectangle>()
-                            {
-                                new Rectangle(650,1548,128,256),
-                            }
-                        }
-                    },
-                    {
-                        "hit", new CharacterState()
-                        {
-                            frames = new List<Rectangle>()
-                            {
-                                new Rectangle(650,1032,128,256),
-                            }
-                        }
-                    },
-                    {
-                        "jump", new CharacterState()
-                        {
-                            frames = new List<Rectangle>()
-                            {
-                                new Rectangle(650,774,128,256),
-                            }
-                        }
-                    },
-                    {
-                        "walk", new CharacterState()
-                        {
-                            frames = new List<Rectangle>()
-                            {
-                                new Rectangle(520,1548,128,256),
-                                new Rectangle(520,1290,128,256)
-                            }
-                        }
-                    }
-                }
-            };
-
-            character.name = "character";
-            character.tag = new Tag("player");
-            character.transform.scaleValue = 0.5f;
-            character.WalkingSoundEffects = new List<SoundEffect>()
-            {
-                SFX[2],
-                SFX[3],
-                SFX[4],
-                SFX[5],
-            };
-
-            character.GroundedSoundEffect = SFX[6];
-            character.RunningBreathe = SFX[7];
-
-            character.colliders.AddRange(new List<IGameObjectCollision>()
-            {
-                new BoundingCircle(character.transform.position, character.transform.scaleValue * 128 / 2, character),
-                new BoundingCircle(character.transform.position + new Vector2(1, 40), character.transform.scaleValue * 128 / 2, character)
-            });
-
-            return character;
-        }
-
-
+        /// <summary>
+        /// This is the test walk plane
+        /// </summary>
         void BuildWalkPlane()
         {
             for (int k = 0; k < 4; k++)
@@ -220,7 +153,20 @@ namespace Lib.Scenes
 
                 for (int i = 0; i < 15; i++)
                 {
-                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2), 0, Vector2.Zero);
+
+                    var atlasSprite = new AtlasSprite();
+                    atlasSprite.AddComponent<RigidBodyComponent>();
+
+                    var rbody = atlasSprite.GetComponent<RigidBodyComponent>();
+
+                    var vec = new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2);
+
+                    var vectorRes = new nkast.Aether.Physics2D.Common.Vector2(vec.X, vec.Y);
+
+
+                    rbody.body = rbody.world.CreateRectangle(i == 0 || i == 14 ? 128 : 128 / 2, 128 / 2, 1, vectorRes, 0, BodyType.Static);
+
+                    var atlasSpriteTest = GameObjectPool.SpawnObject(atlasSprite, new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2), 0, Vector2.Zero);
                     atlasSpriteTest.Atlas = _platformerReduxAtlas;
                     if (k == 0)
                     {
@@ -305,10 +251,7 @@ namespace Lib.Scenes
             coin.tag = new Tag("coin");
             coin.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin.transform.position, coin.transform.scaleValue * 128 / 2, coin) });
 
-            var coinSparkleEmitter = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(310, 450), 0, Vector2.One, true);
-            //coinSparkleEmitter.Position = coin.transform.position;
-            coinSparkleEmitter.name = "coin sparkle emitter";
-            coinSparkleEmitter.transform.SetParent(coin.transform);
+
 
 
             TweenTimeline timeline = Tweening.NewTimeline();
@@ -336,6 +279,11 @@ namespace Lib.Scenes
             //coinSparkleEmitter.Position = coin.transform.position;
             coinSparkleEmitter1.name = "coin sparkle emitter 1";
             coinSparkleEmitter1.transform.SetParent(coin.transform);
+
+            var coinSparkleEmitter = GameObjectPool.SpawnObject(new CoinSparkleEmitter(GameManager.main), new Vector2(310, 450), 0, Vector2.One, true);
+            //coinSparkleEmitter.Position = coin.transform.position;
+            coinSparkleEmitter.name = "coin sparkle emitter";
+            coinSparkleEmitter.transform.SetParent(coin1.transform);
 
             TweenTimeline timeline1 = Tweening.NewTimeline();
             var positionProperty1 = timeline1.AddVector2(coin1.transform, nameof(coin1.transform.position));
@@ -450,7 +398,7 @@ namespace Lib.Scenes
             //ExampleCodeToLoadAndRun();
 
             CreateDetails();
-            var character = SetupCharacter();
+            var character = Character.CreatePlayer(Content);
             CreateGround();
             CreateUI();
 
@@ -473,6 +421,8 @@ namespace Lib.Scenes
 
 
             Tweening.Update(gameTime);
+
+            World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
 
             // TODO: Add your update logic here

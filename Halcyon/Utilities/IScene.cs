@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using nkast.Aether.Physics2D.Dynamics;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,8 @@ namespace Lib.Utilities
 
         public int Id { get; }
         public string Name { get; }
+
+        public World World { get; set; }
 
         /// <summary>
         /// Load the content

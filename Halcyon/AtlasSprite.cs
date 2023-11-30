@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lib.GameObjectComponents;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
@@ -53,18 +55,38 @@ namespace Lib
 
         }
 
+        //protected override void Start()
+        //{
+        //    base.Start();
+
+        //    var rbody = GetComponent<RigidBodyComponent>();
+
+            
+        //    //{
+        //    //    new Vector2(0, 0),
+        //    //    new Vector2(SpriteLocation.Width, 0),
+        //    //    new Vector2(SpriteLocation.Width, SpriteLocation.Height),
+        //    //    new Vector2(0, SpriteLocation.Height)
+        //    //};
+
+        //    if(rbody != null)
+        //    {
+        //        rbody.Add(new nkast.Aether.Physics2D.Dynamics.Fixture(new nkast.Aether.Physics2D.Collision.Shapes.PolygonShape(verts, 1)));
+        //    }
+        //}
+
         /// <summary>
         /// The Draw object method
         /// </summary>
         protected override void DrawObject(GameTime time, Vector2 cameraPositionOffset, float rotationOffset)
         {
-            if(WorldType == SpriteType.Forground)
+            if (WorldType == SpriteType.Forground)
             {
                 cameraPositionOffset.X *= Paralax + 1;
                 cameraPositionOffset.Y *= Paralax + 1;
             }
 
-            if(WorldType == SpriteType.UI)
+            if (WorldType == SpriteType.UI)
             {
                 cameraPositionOffset = Vector2.Zero;
             }
@@ -75,8 +97,19 @@ namespace Lib
                 cameraPositionOffset.Y *= -Paralax + 1;
             }
 
-            batch.Draw(Atlas, transform.position + transform.origin - cameraPositionOffset, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
-            
+            var pos = transform.position + transform.origin - cameraPositionOffset;
+
+            var rbody = GetComponent<RigidBodyComponent>();
+
+            if (rbody != null)
+            {
+                rbody.SetPosition(new Vector2(pos.X, pos.Y));
+            }
+
+
+
+            batch.Draw(Atlas, pos, SpriteLocation, color, transform.rotation, transform.origin, transform.scaleValue, Effect, LayerValue);
+
         }
     }
 

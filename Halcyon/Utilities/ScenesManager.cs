@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
+using nkast.Aether.Physics2D.Dynamics;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,6 +32,32 @@ namespace Lib.Utilities
         /// enumerate through the list of scenes
         /// </summary>
         public IEnumerable<IScene> Scenes => _scenes.Values;
+
+
+        #region singleton pattern
+
+        /// <summary>
+        /// The main instance of the scene manager
+        /// </summary>
+        public static ScenesManager Instance;
+
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <exception cref="System.Exception">thrown if there is more than one scenes manager in the application</exception>
+        public ScenesManager()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                throw new System.Exception("There can only be one instance of the scene manager");
+            }
+        }
+        #endregion
 
         /// <summary>
         /// add a scene to the manager
@@ -60,6 +89,21 @@ namespace Lib.Utilities
         }
 
         /// <summary>
+        /// The the world of the current scene
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException">thrown if no scenes are currently loaded</exception>
+        public World GetCurrentWorld()
+        {
+            if (_loadedScenes.Count > 0)
+            {
+                return _loadedScenes[0].World;
+            }
+
+            throw new NullReferenceException("no scenes loaded");
+        }
+
+        /// <summary>
         /// Load the list of scenes
         /// </summary>
         /// <param name="listOfScenestoLoad">the list of scenes to unload</param>
@@ -69,14 +113,13 @@ namespace Lib.Utilities
             {
                 if (_scenes.ContainsKey(x) && !_loadedScenes.Contains(_scenes[x]))
                 {
+                    _loadedScenes.Add(_scenes[x]);
                     _scenes[x].Initialize();
                     _scenes[x].LoadContent(contentManager);
-                    _loadedScenes.Add(_scenes[x]);
                     _scenes[x].Loaded = true;
                 }
             }
         }
-
 
         /// <summary>
         /// the list of scenes to unload

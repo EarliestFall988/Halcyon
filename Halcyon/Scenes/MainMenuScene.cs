@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using nkast.Aether.Physics2D.Dynamics;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -54,7 +56,7 @@ namespace Lib.Scenes
         private Texture2D _debugDot;
         private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
-
+        public World World { get; set; }
 
         private Vector2 mousePosition = Vector2.Zero;
         private float mouseParalaxMultiplier = 0.125f / 2f;
@@ -101,6 +103,8 @@ namespace Lib.Scenes
             Camera.HandheldCameraShakeAmount = 2;
             Camera.HandheldCameraShakeFrequency = 3;
             Camera.CharacterCameraOffset = new Vector2(-200, -200);
+
+            World = new();
         }
 
         #region content init
