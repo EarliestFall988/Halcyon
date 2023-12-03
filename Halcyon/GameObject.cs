@@ -342,13 +342,14 @@ namespace Lib
         /// Add the component to the game object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public void AddComponent<T>() where T : class, IGameObjectComponent
+        public T AddComponent<T>() where T : class, IGameObjectComponent
         {
             if (GetComponent<T>() != null)
-                return;
+                return GetComponent<T>();
 
             var component = (IGameObjectComponent)Activator.CreateInstance(typeof(T), this);
             components.Add(component);
+            return component as T;
         }
 
         public void RemoveComponent<T>() where T : class, IGameObjectComponent

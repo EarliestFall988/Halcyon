@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,9 +29,10 @@ namespace Lib.Utilities
         /// </summary>
         /// <param name="vector2"></param>
         /// <returns></returns>
-        public static nkast.Aether.Physics2D.Common.Vector2 GetAetherVector2(this Vector2 vector2)
+        public static nkast.Aether.Physics2D.Common.Vector2 ToAetherVector2(this Vector2 vector2)
         {
             return new nkast.Aether.Physics2D.Common.Vector2(vector2.X, vector2.Y);
         }
+
     }
 }

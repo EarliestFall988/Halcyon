@@ -59,10 +59,10 @@ namespace Lib.Collision
             _centerStore = obj.transform.position + offset;
             _radius = radius * obj.transform.scaleValue;
             gameObject = obj;
-  
-            Debug.WriteLine($"radius ({obj.tag.name}): " + _radius);
 
-            DebugHelper.Main.Collisions.Add(this); // this is for debugging purposes
+            Debug.WriteLine($"radius ({obj.tag.name}): " + _radius);
+            if (DebugHelper.Main != null && DebugHelper.Main.Collisions != null)
+                DebugHelper.Main.Collisions.Add(this); // this is for debugging purposes
         }
 
 

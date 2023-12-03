@@ -1,14 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lib.GameObjectComponents;
+using Lib.Utilities;
+using Lib.WorldItems;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using nkast.Aether.Physics2D.Collision.Shapes;
+using nkast.Aether.Physics2D.Dynamics;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lib
 {
@@ -32,10 +36,11 @@ namespace Lib
         public SoundEffect RunningBreathe;
         private SoundEffectInstance runningSFXInstance;
 
-        private float walkSFXTime = 0.25f;
-        private float walkSFXTimer = 0f;
         public List<SoundEffect> WalkingSoundEffects;
         public SoundEffect GroundedSoundEffect;
+
+        private float walkSFXTime = 0.25f;
+        private float walkSFXTimer = 0f;
 
         public Texture2D Atlas;
 
@@ -49,6 +54,13 @@ namespace Lib
         {
             pool.SpawnObject(this, new Vector2(100, 100), 0, origin);
 
+
+            //adding physics component to the character
+            AddComponent<RigidBodyComponent>();
+            var rbody = GetComponent<RigidBodyComponent>();
+            rbody.body = rbody.world.CreateCapsule(1, 1, 1, bodyType: BodyType.Dynamic);
+
+            rbody.Add(new nkast.Aether.Physics2D.Dynamics.Fixture(new CircleShape(transform.scaleValue * 128 / 2, 1)));
         }
 
         private void HorizontalMovement(GameTime time)
@@ -56,7 +68,7 @@ namespace Lib
             if (Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
             {
 
-                VelocityX -= speedUpTime * (float)time.ElapsedGameTime.TotalSeconds;
+                VelocityX -= speedUpTime;
 
                 effect = SpriteEffects.FlipHorizontally;
                 if (grounded) _currentState = States["walk"];
@@ -64,7 +76,7 @@ namespace Lib
             else if (Keyboard.GetState().IsKeyDown(Keys.D) && !Keyboard.GetState().IsKeyDown(Keys.A))
             {
 
-                VelocityX += speedUpTime * (float)time.ElapsedGameTime.TotalSeconds;
+                VelocityX += speedUpTime;
 
                 effect = SpriteEffects.None;
                 if (grounded) _currentState = States["walk"];
@@ -72,9 +84,9 @@ namespace Lib
             else
             {
                 if (VelocityX > 0.125)
-                    VelocityX -= breakSpeedTime * (float)time.ElapsedGameTime.TotalSeconds;
+                    VelocityX -= breakSpeedTime;
                 else if (VelocityX < -0.125)
-                    VelocityX += breakSpeedTime * (float)time.ElapsedGameTime.TotalSeconds;
+                    VelocityX += breakSpeedTime;
                 else
                     VelocityX = 0;
 
@@ -99,7 +111,7 @@ namespace Lib
                 grounded = false;
             }
 
-            VelocityY += 9.8f * (float)time.ElapsedGameTime.TotalSeconds;
+            VelocityY += 9.8f;
 
             if (transform.position.Y >= 163 && VelocityY > 0)
             {
@@ -211,7 +223,12 @@ namespace Lib
 
 
             Vector2 finalVector = new Vector2(finalHorizontalMovementSpeed, VelocityY);
-            transform.Translate(finalVector);
+            //transform.Translate(finalVector);
+            var rbody = GetComponent<RigidBodyComponent>();
+            rbody.body.LinearVelocity = new nkast.Aether.Physics2D.Common.Vector2(finalVector.X, finalVector.Y);
+
+            //Debug.WriteLine(rbody.body.Position.ToSystemVector2());
+            transform.position = rbody.body.Position.ToSystemVector2();
         }
 
         protected override void DrawObject(GameTime time, Vector2 cameraPositionOffset, float rotationOffset)
@@ -239,49 +256,6 @@ namespace Lib
         public static void SetupCharacter()
         {
 
-        }
-    }
-
-    public class CharacterState
-    {
-
-        public int currentFrame { get; set; } = 0;
-        public float animatedSpriteSpeed { get; set; } = 0.125f;
-        private float _animatedSpriteSpeedTime { get; set; } = 0;
-        public Color color { get; set; } = Color.White;
-        public List<Rectangle> frames { get; set; } = new List<Rectangle>();
-
-
-        public void DrawObject(GameTime time, SpriteEffects effect, Texture2D atlas, SpriteBatch batch, GameObject gameObject, Vector2 cameraPositionOffset, float cameraRotationOffset)
-        {
-            if (atlas == null)
-                throw new Exception("atlas is null");
-
-            if (frames.Count == 0)
-                throw new Exception("frames is empty");
-
-            if (animatedSpriteSpeed <= 0)
-                throw new Exception("animatedSpriteSpeed is less than or equal to 0");
-
-            if (frames[currentFrame] == default)
-                throw new Exception("the frames");
-
-            if (batch == null)
-                throw new Exception("batch is null");
-
-            if (_animatedSpriteSpeedTime > animatedSpriteSpeed)
-            {
-                _animatedSpriteSpeedTime = 0;
-                currentFrame++;
-            }
-
-            if (currentFrame >= frames.Count)
-            {
-                currentFrame = 0;
-            }
-
-            batch.Draw(atlas, gameObject.transform.position + gameObject.transform.origin - cameraPositionOffset, frames[currentFrame], color, gameObject.transform.rotation - cameraRotationOffset, gameObject.transform.origin, gameObject.transform.scaleValue, effect, gameObject.LayerValue);
-            _animatedSpriteSpeedTime += (float)time.ElapsedGameTime.TotalSeconds;
         }
     }
 }

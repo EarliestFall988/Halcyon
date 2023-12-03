@@ -2,15 +2,10 @@
 
 using Microsoft.Xna.Framework;
 
-using nkast.Aether.Physics2D.Collision;
 using nkast.Aether.Physics2D.Dynamics;
 using nkast.Aether.Physics2D.Dynamics.Contacts;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lib.GameObjectComponents
 {
@@ -33,7 +28,6 @@ namespace Lib.GameObjectComponents
             if (gameObject.Enabled)
             {
                 ToggleBody(true);
-
             }
             else
             {
@@ -55,20 +49,25 @@ namespace Lib.GameObjectComponents
         {
             if (!isEnabled && body != null)
             {
-                this.body.OnCollision -= OnCollision;
-                body.World.Remove(this.body);
+                //this.body.OnCollision -= OnCollision;
+                //body.World.Remove(this.body);
             }
 
             if (isEnabled && body != null && world != null)
             {
                 //world.Add(body); TODO: we should only add the body once in the world...
-                body.OnCollision += OnCollision;
+                //body.OnCollision += OnCollision;
             }
         }
 
         public void Update(GameTime time)
         {
-            this.gameObject.transform.position = body.Position.ToSystemVector2();
+            if (body != null && gameObject.transform != null)
+            {
+                this.gameObject.transform.position = body.Position.ToSystemVector2();
+            }
+            else
+                throw new NullReferenceException("you have not defined the body for this game object");
         }
 
         /// <summary>
@@ -101,18 +100,6 @@ namespace Lib.GameObjectComponents
         public void Draw()
         {
 
-        }
-
-        /// <summary>
-        /// Collision Event When the physics engine detects a collision
-        /// </summary>
-        /// <param name="me">this object that collided</param>
-        /// <param name="other">the other object</param>
-        /// <param name="contact"></param>
-        /// <returns>returns true by default</returns>
-        public bool OnCollision(Fixture me, Fixture other, Contact contact)
-        {
-            return true;
         }
     }
 }

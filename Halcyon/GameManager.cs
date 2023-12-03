@@ -31,6 +31,7 @@ namespace Lib
         public static Game main;
 
         public Song song;
+        public bool StartSong { get; set; } = false;
 
         public GameManager()
         {
@@ -54,22 +55,25 @@ namespace Lib
             // add the scenes here...
             MainMenuScene mainMenuScene = new MainMenuScene(_graphics, _spriteBatch, Content);
             Game1Scene firstScene = new Game1Scene(_graphics, _spriteBatch, Content);
-
+            PhysicsTestScene physics = new PhysicsTestScene(_graphics, _spriteBatch, Content);
 
 
             // add the scenes to the manager
             scenesManager.AddScene(mainMenuScene);
             scenesManager.AddScene(firstScene);
+            scenesManager.AddScene(physics);
 
+            scenesManager.LoadScenesByName(new List<string>() { physics.Name }, Content);
 
             // load the first scene(s)
-            scenesManager.LoadScenesByName(new List<string>() { "Main Menu" }, Content);
+            //scenesManager.LoadScenesByName(new List<string>() { "Main Menu" }, Content);
 
-
-            song = Content.Load<Song>("Audio/angelic-interlude-by-tim-kulig-from-filmmusic-io");
-            MediaPlayer.Play(song);
-            //  Uncomment the following line will also loop the song
-            MediaPlayer.IsRepeating = true;
+            if (StartSong)
+            {
+                song = Content.Load<Song>("Audio/angelic-interlude-by-tim-kulig-from-filmmusic-io");
+                MediaPlayer.Play(song);
+                MediaPlayer.IsRepeating = true;
+            }
 
 
             base.Initialize();
@@ -96,7 +100,7 @@ namespace Lib
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Blue);
 
             scenesManager.DrawLoadedScenes(gameTime);
             base.Draw(gameTime);

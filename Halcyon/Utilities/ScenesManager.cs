@@ -6,6 +6,7 @@ using nkast.Aether.Physics2D.Dynamics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Lib.Utilities
@@ -95,8 +96,11 @@ namespace Lib.Utilities
         /// <exception cref="NullReferenceException">thrown if no scenes are currently loaded</exception>
         public World GetCurrentWorld()
         {
+
+
             if (_loadedScenes.Count > 0)
             {
+                Debug.WriteLine(_loadedScenes[0].Name);
                 return _loadedScenes[0].World;
             }
 

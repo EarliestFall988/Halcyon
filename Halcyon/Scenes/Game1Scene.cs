@@ -106,6 +106,7 @@ namespace Lib.Scenes
             Camera.CharacterCameraOffset = new Vector2(-200, -200);
 
             World = new();
+            World.Gravity = new nkast.Aether.Physics2D.Common.Vector2(0, 10);
         }
 
         #region content initialization
@@ -155,16 +156,16 @@ namespace Lib.Scenes
                 {
 
                     var atlasSprite = new AtlasSprite();
-                    atlasSprite.AddComponent<RigidBodyComponent>();
+                    //atlasSprite.AddComponent<RigidBodyComponent>();
 
-                    var rbody = atlasSprite.GetComponent<RigidBodyComponent>();
+                    //var rbody = atlasSprite.GetComponent<RigidBodyComponent>();
 
-                    var vec = new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2);
+                    //var vec = new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2);
 
-                    var vectorRes = new nkast.Aether.Physics2D.Common.Vector2(vec.X, vec.Y);
+                    //var vectorRes = new nkast.Aether.Physics2D.Common.Vector2(vec.X, vec.Y);
 
 
-                    rbody.body = rbody.world.CreateRectangle(i == 0 || i == 14 ? 128 : 128 / 2, 128 / 2, 1, vectorRes, 0, BodyType.Static);
+                    //rbody.body = rbody.world.CreateRectangle(i == 0 || i == 14 ? 128 : 128 / 2, 128 / 2, 1, vectorRes, 0);
 
                     var atlasSpriteTest = GameObjectPool.SpawnObject(atlasSprite, new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2), 0, Vector2.Zero);
                     atlasSpriteTest.Atlas = _platformerReduxAtlas;
