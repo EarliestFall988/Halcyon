@@ -1,4 +1,5 @@
 ﻿using Lib.Collision;
+using Lib.Content;
 using Lib.Particle_System;
 using Lib.PleasingTweening;
 using Lib.Utilities;
@@ -14,10 +15,6 @@ using Pleasing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lib.Scenes
 {
@@ -60,6 +57,14 @@ namespace Lib.Scenes
         public AtlasSprite CoinsCollectedSprite;
 
         public bool Loaded { get; set; } = false;
+
+        public bool GameRunning { get; set; } = true;
+
+        List<FallToGroundSolver> deathSolvers = new List<FallToGroundSolver>();
+
+        GameCharacter GameCharacter;
+
+        ResetGameHandler ResetGameHandler = new();
 
         public Game1Scene(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, ContentManager contentManager)
         {
@@ -213,14 +218,13 @@ namespace Lib.Scenes
         }
 
 
-        void BuildWalkPlane()
+        void BuildWalkPlane(float start, float count)
         {
             for (int k = 0; k < 4; k++)
             {
-
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < count; i++)
                 {
-                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128, 355 + 128 * k / 2), 0, Vector2.Zero);
+                    var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128 + (start * 128), 355 + 128 * k / 2), 0, Vector2.Zero);
                     atlasSpriteTest.Atlas = _platformerReduxAtlas;
                     if (k == 0)
                     {
@@ -233,6 +237,57 @@ namespace Lib.Scenes
                     atlasSpriteTest.transform.scaleValue = 0.5f;
                 }
             }
+        }
+
+        FallToGroundSolver BuildFallDownSolver(float start, float count)
+        {
+            //for (int k = 0; k < 4; k++)
+            //{
+            //    for (int i = 0; i < count; i++)
+            //    {
+
+            if (_drawVisualGizmos)
+            {
+
+                for (int k = 0; k < 4; k++)
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128 + (start * 128), 360 + 128 * k / 2), 0, Vector2.Zero);
+                        atlasSpriteTest.Atlas = _platformerReduxAtlas;
+                        atlasSpriteTest.color = Color.Red;
+                        if (k == 0)
+                        {
+                            atlasSpriteTest.SpriteLocation = new Rectangle(1560, 390, 128, 128);
+                        }
+                        else
+                        {
+                            atlasSpriteTest.SpriteLocation = new Rectangle(1690, 390, 128, 128);
+                        }
+                        atlasSpriteTest.transform.scaleValue = 0.5f;
+                    }
+                }
+            }
+
+
+            Vector2 startVector = new Vector2((start * 128) - 128 * 0.75f, 355);
+            Vector2 endVector = new Vector2((128 * count / 2) - 128 * 2f + (start * 128), 355);
+
+            return new FallToGroundSolver(startVector, endVector);
+
+            //        //var atlasSpriteTest = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2((128 * i / 2) - 128 + (start * 128), 355 + 128 * k / 2), 0, Vector2.Zero);
+            //        //atlasSpriteTest.Atlas = _platformerReduxAtlas;
+            //        if (k == 0)
+            //        {
+            //            //atlasSpriteTest.SpriteLocation = new Rectangle(1560, 390, 128, 128);
+            //        }
+            //        else
+            //        {
+            //            //atlasSpriteTest.SpriteLocation = new Rectangle(1690, 390, 128, 128);
+            //        }
+            //        //atlasSpriteTest.transform.scaleValue = 0.5f;
+            //    }
+            //}
         }
 
         void BuildMass(Vector2 startingPoint, int width, int height, Texture2D textureAtlas, Rectangle spriteLocation, float scale = 0.5f)
@@ -251,7 +306,19 @@ namespace Lib.Scenes
 
         void CreateGround()
         {
-            BuildWalkPlane();
+            BuildWalkPlane(0, 15); // 0 + 15 = 15
+            BuildWalkPlane(9, 7); //9 + 6 = 15
+            BuildWalkPlane(14, 19); //9 + 6 = 15
+
+
+            deathSolvers.Add(BuildFallDownSolver(-1, 5)); // 7 + 4 = 11
+
+            deathSolvers.Add(BuildFallDownSolver(7, 4)); // 7 + 4 = 11
+            deathSolvers.Add(BuildFallDownSolver(12, 4)); // 14 + 4 = 18
+            deathSolvers.Add(BuildFallDownSolver(23, 5)); // 7 + 4 = 11
+
+
+
             BuildMass(new Vector2(-128 * 4, -128 / 2), 8, 12, _platformerReduxAtlas, new Rectangle(1040, 780, 128, 128));
         }
 
@@ -273,10 +340,6 @@ namespace Lib.Scenes
 
             CreateBackground(5);
 
-            var fence = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128, 355 - 128 / 2), 0, Vector2.Zero);
-            fence.Atlas = _platformerReduxAtlas;
-            fence.SpriteLocation = new Rectangle(2210, 780, 128, 128);
-            fence.transform.scaleValue = 0.5f;
 
             var fence2 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128 + 128 / 2, 355 - 128 / 2), 0, Vector2.Zero);
             fence2.Atlas = _platformerReduxAtlas;
@@ -287,6 +350,11 @@ namespace Lib.Scenes
             fence1.Atlas = _platformerReduxAtlas;
             fence1.SpriteLocation = new Rectangle(2210, 650, 128, 128);
             fence1.transform.scaleValue = 0.5f;
+
+            var fence = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128, 355 - 128 / 2), 0, Vector2.Zero);
+            fence.Atlas = _platformerReduxAtlas;
+            fence.SpriteLocation = new Rectangle(2210, 780, 128, 128);
+            fence.transform.scaleValue = 0.5f;
 
             var bush = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(-5, 355 - 128 / 2), 0, Vector2.Zero);
             bush.Atlas = _platformerReduxAtlas;
@@ -350,6 +418,53 @@ namespace Lib.Scenes
             rotationProperty1.AddFrame(1200 * 2, 0, Easing.Back.InOut);
 
             timeline1.Loop = true;
+
+            var fence4 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(128 * 10, 355 - 128 / 2), 0, Vector2.Zero);
+            fence4.Atlas = _platformerReduxAtlas;
+            fence4.SpriteLocation = new Rectangle(2210, 780, 128, 128);
+            fence4.transform.scaleValue = 0.5f;
+
+            var bush2 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(5 * 500, 355 - 128 / 2), 0, Vector2.Zero);
+            bush2.Atlas = _platformerReduxAtlas;
+            bush2.SpriteLocation = new Rectangle(2210, 1690, 128, 128);
+
+            var bush3 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(5 * 450, 355 - 128 / 2), 0, Vector2.Zero);
+            bush3.transform.scaleValue = 0.5f;
+            bush3.Atlas = _platformerReduxAtlas;
+            bush3.SpriteLocation = new Rectangle(2210, 1690, 128, 128);
+            bush3.transform.scaleValue = 0.5f;
+
+            var rock2 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(569 * 3, 355 - 128 / 2), 0, Vector2.Zero);
+            rock2.Atlas = _platformerReduxAtlas;
+            rock2.SpriteLocation = new Rectangle(2080, 390, 128, 128);
+            rock2.transform.scaleValue = 0.5f;
+
+            var rock3 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(569 * 3 + 200, 355 - 128 / 2), 0, Vector2.Zero);
+            rock3.Atlas = _platformerReduxAtlas;
+            rock3.SpriteLocation = new Rectangle(2080, 390, 128, 128);
+            rock3.transform.scaleValue = 0.5f;
+
+            var coin2 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(500 * 5, 300 - 128 / 2), 0, new Vector2(128, 128) / 2);
+            coin2.Atlas = _platformerReduxAtlas;
+            coin2.SpriteLocation = new Rectangle(2730, 0, 128, 128);
+            coin2.transform.scaleValue = 0.5f;
+            coin2.tag = new Tag("coin");
+            coin2.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin2.transform.position, coin2.transform.scaleValue * 128 / 2, coin2) });
+
+            var coin3 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(100 * 20, 325 - 128 / 2), 0, new Vector2(128, 128) / 2);
+            coin3.Atlas = _platformerReduxAtlas;
+            coin3.SpriteLocation = new Rectangle(2730, 0, 128, 128);
+            coin3.transform.scaleValue = 0.5f;
+            coin3.tag = new Tag("coin");
+            coin3.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin3.transform.position, coin3.transform.scaleValue * 128 / 2, coin3) });
+
+            var coin4 = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(800 * 2.25f, 150 - 128 / 2), 0, new Vector2(128, 128) / 2);
+            coin4.Atlas = _platformerReduxAtlas;
+            coin4.SpriteLocation = new Rectangle(2730, 0, 128, 128);
+            coin4.transform.scaleValue = 0.5f;
+            coin4.tag = new Tag("coin");
+            coin4.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(coin4.transform.position, coin4.transform.scaleValue * 128 / 2, coin4) });
+
         }
 
         void CreateUI()
@@ -450,12 +565,29 @@ namespace Lib.Scenes
             //ExampleCodeToLoadAndRun();
 
             CreateDetails();
-            var character = SetupCharacter();
+            GameCharacter = SetupCharacter() as GameCharacter;
             CreateGround();
             CreateUI();
 
+            var springAtlas = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(800 * 2.25f, 330 - 128 / 2), 0, Vector2.One * 128 / 2);
+            springAtlas.Atlas = _platformerReduxAtlas;
+            springAtlas.SpriteLocation = new Rectangle(1950, 1430, 128, 128);
+            springAtlas.transform.scaleValue = 0.5f;
+            springAtlas.WorldType = SpriteType.Props;
+            springAtlas.tag = new Tag("spring");
+            springAtlas.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(springAtlas.transform.position, springAtlas.transform.scaleValue * 128 / 2, springAtlas) });
 
-            Camera.TargetCharacter = character;
+            var sprungAtlas = GameObjectPool.SpawnObject(new AtlasSprite(), new Vector2(800 * 2.25f, 330 - 128 / 2), 0, Vector2.One * 128 / 2);
+            sprungAtlas.Atlas = _platformerReduxAtlas;
+            sprungAtlas.SpriteLocation = new Rectangle(1950, 1430, 128, 128);
+            sprungAtlas.transform.scaleValue = 0.5f;
+            sprungAtlas.WorldType = SpriteType.Props;
+            sprungAtlas.tag = new Tag("spring");
+            sprungAtlas.colliders.AddRange(new List<IGameObjectCollision>() { new BoundingCircle(sprungAtlas.transform.position, sprungAtlas.transform.scaleValue * 128 / 2, sprungAtlas) });
+
+            //var spring = new Spring(GameCharacter, new Vector2(128 * 200, 355 - 128 / 2), springAtlas, sprungAtlas, "spring");
+
+            Camera.TargetCharacter = GameCharacter;
         }
 
 
@@ -465,6 +597,13 @@ namespace Lib.Scenes
             DebugHelper.Clear();
         }
 
+        public void ResetGame()
+        {
+            GameRunning = false;
+            ResetGameHandler.Reset = true;
+            PlayerProgression.CurrentCollectedCoins = 0;
+            Camera.TargetCharacter = null;
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -525,8 +664,28 @@ namespace Lib.Scenes
                             SFX[0].Play();
                         }
                     }
+
+                    if (result.collision)
+                    {
+                        if (result.a.gameObject.tag.name == "player" && result.b.gameObject.tag.name == "spring")
+                        {
+                            Debug.WriteLine(result.a.gameObject.tag.name + " collided with " + result.b.gameObject.tag.name);
+                            GameCharacter.Bounce(1.5f);
+                        }
+                    }
                 }
             }
+
+            foreach (var x in deathSolvers)
+            {
+                if (x.IsFallingDown(GameCharacter.transform.position) && GameCharacter.grounded)
+                {
+                    GameCharacter.SetPlayerFallingDown(true);
+                    ResetGame();
+                }
+            }
+
+            ResetGameHandler.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Camera.UpdateCamera(gameTime); // camera shake and movement with the character
         }

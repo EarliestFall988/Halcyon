@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Lib
 {
-    public class GameCharacter : GameObject
+    public sealed class GameCharacter : GameObject
     {
         private float speedUpTime = 4f;
         private float breakSpeedTime = 4f;
@@ -26,7 +26,8 @@ namespace Lib
         public float VelocityX = 0;
         public float VelocityY = 0;
 
-        private bool grounded = false;
+        public bool grounded { get; private set; } = false;
+        public bool fallingDown { get; private set; } = false;
         private bool running = false;
 
         public SoundEffect RunningBreathe;
@@ -51,6 +52,11 @@ namespace Lib
 
         }
 
+
+        /// <summary>
+        /// Horizontal movement
+        /// </summary>
+        /// <param name="time"></param>
         private void HorizontalMovement(GameTime time)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
@@ -91,6 +97,10 @@ namespace Lib
             }
         }
 
+        /// <summary>
+        /// Vertical movement
+        /// </summary>
+        /// <param name="time"></param>
         private void VerticalMovment(GameTime time)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) && grounded)
@@ -101,7 +111,7 @@ namespace Lib
 
             VelocityY += 9.8f * (float)time.ElapsedGameTime.TotalSeconds;
 
-            if (transform.position.Y >= 163 && VelocityY > 0)
+            if (transform.position.Y >= 163 && VelocityY > 0 && !fallingDown)
             {
                 VelocityY = 0;
 
@@ -118,9 +128,15 @@ namespace Lib
         {
             if (States.Count == 0)
                 throw new Exception("States is empty");
-
-            VerticalMovment(time);
-            HorizontalMovement(time);
+            if (!fallingDown)
+            {
+                VerticalMovment(time);
+                HorizontalMovement(time);
+            }
+            else
+            {
+                VelocityY += 9.8f * (float)time.ElapsedGameTime.TotalSeconds;
+            }
 
             if (grounded)
             {
@@ -233,6 +249,37 @@ namespace Lib
                 var walk = WalkingSoundEffects[new Random().Next(0, WalkingSoundEffects.Count)].CreateInstance();
                 walk.Play();
                 walkSFXTimer = 0;
+            }
+        }
+
+        public void SetPlayerFallingDown(bool fallingDown)
+        {
+            VelocityX = VelocityX / 4;
+            this.fallingDown = fallingDown;
+        }
+
+        public void Bounce(float jumpMultiplierAmt)
+        {
+            VelocityY = -jumpHeight * jumpMultiplierAmt;
+        }
+
+        public bool IsTouching(GameObject obj)
+        {
+            if (obj == null)
+            {
+                throw new Exception("obj is null");
+            }
+
+            if (obj.transform.position.X + obj.transform.origin.X > transform.position.X - transform.origin.X &&
+                               obj.transform.position.X - obj.transform.origin.X < transform.position.X + transform.origin.X &&
+                                              obj.transform.position.Y + obj.transform.origin.Y > transform.position.Y - transform.origin.Y &&
+                                                             obj.transform.position.Y - obj.transform.origin.Y < transform.position.Y + transform.origin.Y)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

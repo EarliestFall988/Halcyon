@@ -87,7 +87,7 @@ namespace Lib
             {
                 if (x.Name != "Main Menu" && x.Loaded)
                 {
-                    MediaPlayer.Volume = 0.1f;
+                    MediaPlayer.Volume = 0.5f;
                 }
             }
 

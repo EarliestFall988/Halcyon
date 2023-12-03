@@ -31,6 +31,16 @@ namespace Lib.Utilities
         public IEnumerable<IScene> Scenes => _scenes.Values;
 
         /// <summary>
+        /// The instance of the scenes manager
+        /// </summary>
+        public static ScenesManager Main { get; set; }
+
+        public ScenesManager()
+        {
+            Main = this;
+        }
+
+        /// <summary>
         /// add a scene to the manager
         /// </summary>
         /// <param name="scene">the scene</param>
@@ -104,6 +114,20 @@ namespace Lib.Utilities
                     _loadedScenes.Remove(_scenes[x]);
                 }
             }
+        }
+
+        public void ResetScenes()
+        {
+            var loadedScenes = new List<string>();
+            ContentManager content = null;
+            foreach (var x in _loadedScenes)
+            {
+                content = x.Content;
+                loadedScenes.Add(x.Name);
+            }
+
+            UnloadScenesByName(loadedScenes, true);
+            LoadScenesByName(loadedScenes, content);
         }
 
 
