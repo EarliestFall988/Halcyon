@@ -45,7 +45,7 @@ namespace Lib.Scenes
         private Texture2D _debugbox;
         private Texture2D _debugcircle;
         private Texture2D _debugDot;
-        private bool _drawVisualGizmos = true; // set to true to see the collision gizmos
+        private bool _drawVisualGizmos = false; // set to true to see the collision gizmos
 
         public GameObjectPool GameObjectPool { get; private set; }
         public Camera Camera { get; private set; } = new();
